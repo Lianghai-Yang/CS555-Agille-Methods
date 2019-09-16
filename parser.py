@@ -93,7 +93,9 @@ def getRelationship():
 def printIndi():
     tab = pt.PrettyTable()
     tab.field_names = ['ID', 'NAME', 'GENDER', 'BIRTH DATE', 'DEATH DAET', 'SPOUSE', 'CHILD']
-    for id in individuals:
+    indi_keys = list(individuals.keys())
+    indi_keys.sort(reverse=False)
+    for id in indi_keys:
         indi = individuals[id]
         spouse = 'N/A'
         child = 'N/A'
@@ -109,7 +111,9 @@ def printIndi():
 def printFamilies():
     tab = pt.PrettyTable()
     tab.field_names = ['ID', 'HUSBAND ID', 'HUSBAND NAME', 'WIFE ID', 'WIFE NAME', 'Chilren']
-    for id in families:
+    family_keys = list(families.keys())
+    family_keys.sort(reverse=False)
+    for id in family_keys:
         family = families[id]
         tab.add_row([
             id,
