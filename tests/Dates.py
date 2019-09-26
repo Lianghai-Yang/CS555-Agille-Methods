@@ -3,7 +3,6 @@ sys.path.append('..')
 import unittest
 from Utils import Utils
 
-
 class Dates(unittest.TestCase):
     def test_divorce_before_death(self):
         utils = Utils()
