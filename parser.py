@@ -1,4 +1,6 @@
 import prettytable as pt
+import utils
+# from utils import divorce_before_death
 
 KEYWORDS = {
     '0': ('INDI', 'FAM', 'HEAD', 'TRLR', 'NOTE',),
@@ -57,7 +59,7 @@ def parseLine(line):
 
 # Parsed line has structure like [[level, tag, arguments], [level, tag, arguments] ...]
 def save(parsedLines):
-    obj = { 'DEAT': 'N/A' }
+    obj = {}
     obj_type = None
     date_type = None
     for line in parsedLines:
@@ -66,29 +68,55 @@ def save(parsedLines):
             obj['ID'] = line[2]
         elif line[0] == '1':
             if line[1] in KEYWORDS['1'] and len(line) == 3:
-                obj[line[1]] = line[2]
+                # Array fields
+                if line[1] in ['CHIL']:
+                    if line[1] in obj:
+                        obj[line[1]].append(line[2])
+                    else:
+                        obj[line[1]] = [ line[2], ]
+                else:
+                    obj[line[1]] = line[2]
+
+            #  Date fields
             if line[1] in ['DEAT', 'BIRT', 'MARR', 'DIV']:
                 obj[line[1]] = None
                 date_type = line[1]
+
         elif line[0] == '2':
             if line[1] == 'DATE':
                 obj[date_type] = line[2]
-
+    # divorce_before_death(obj)
     if obj_type == 'INDI':
+        if 'DEAT' not in obj:
+            obj['DEAT'] = 'N/A'
         individuals[obj['ID']] = obj
     elif obj_type == 'FAM':
+        MISSING_FIELDS = ['DIV', 'CHIL']
+        for field in MISSING_FIELDS:
+            if field not in obj:
+                obj[field] = 'N/A'
         families[obj['ID']] = obj
 
 def getRelationship():
     for id in families:
         family = families[id]
         fields = ['CHIL', 'HUSB', 'WIFE']
+        # if 'CHIL' not in family:
+        #     family['CHIL'] = []
         for field in fields:
             if field in family:
-                if field in individuals[family[field]]:
-                    individuals[family[field]][field].append(id)
+                ids = []
+                if field is 'CHIL':
+                    ids = family['CHIL']
                 else:
-                    individuals[family[field]][field] = [ id, ]
+                    ids.append(family[field])
+                if isinstance(ids, list) is False:
+                    continue
+                for iid in ids:
+                    if field in individuals[iid]:
+                        individuals[iid][field].append(id)
+                    else:
+                        individuals[iid][field] = [ id, ]
 
 def printIndi():
     tab = pt.PrettyTable()
@@ -105,12 +133,13 @@ def printIndi():
             spouse = indi['HUSB']
         if 'CHIL' in indi:
             child = indi['CHIL']
+        print(spouse)
         tab.add_row([id, indi['NAME'], indi['SEX'], indi['BIRT'], indi['DEAT'], spouse, child])
     print(tab)
 
 def printFamilies():
     tab = pt.PrettyTable()
-    tab.field_names = ['ID', 'HUSBAND ID', 'HUSBAND NAME', 'WIFE ID', 'WIFE NAME', 'Chilren']
+    tab.field_names = ['ID', 'HUSBAND ID', 'HUSBAND NAME', 'WIFE ID', 'WIFE NAME', 'CHILDREN', 'DIVORCE']
     family_keys = list(families.keys())
     family_keys.sort(reverse=False)
     for id in family_keys:
@@ -121,7 +150,8 @@ def printFamilies():
             individuals[family['HUSB']]['NAME'],
             family['WIFE'],
             individuals[family['WIFE']]['NAME'],
-            family['CHIL']
+            family['CHIL'],
+            family['DIV']
         ])
     print(tab)
 main()
