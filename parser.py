@@ -1,5 +1,5 @@
 import prettytable as pt
-import utils
+import Utils
 # from utils import divorce_before_death
 
 KEYWORDS = {
@@ -48,12 +48,6 @@ def parseLine(line):
     if parsed_line[1] in ('INDI', 'FAM') and swap is False:
         valid = 'N'
 
-    # print('--> {}'.format(line))
-    # print('<-- {level}|{tag}|{valid}|{arguments}'.format(
-    #     level=parsed_line[0],
-    #     tag=parsed_line[1],
-    #     valid=valid,
-    #     arguments='' if len(parsed_line) < 3 else parsed_line[2]))
     return parsed_line
 
 
@@ -154,7 +148,5 @@ def printFamilies():
             family['DIV']
         ])
     print(tab)
+    
 main()
-
-
-
