@@ -42,14 +42,18 @@ class Utils:
         return True
 
     def list_recent_deaths(self,people):
-        recent_deaths = [];
-        for person in people:
-            if person['DEAT'] is not None:
+        
+        recent_deaths = []
+        indi_keys = list(people.keys())
+       
+        for id in indi_keys:
+           indi = people[id]
+           if indi['DEAT'] != 'N/A':
+                
                 today = datetime.today()
-                deaths_time = datetime.strptime(people['DEAT'],_format)
+                deaths_time = datetime.strptime(indi['DEAT'],_format)
                 delta = today - deaths_time    
                 if delta <= timedelta(days=30):
-                    recent_deaths.append(person['ID'],person['DEAT'])
+                    recent_deaths.append(people[id])
+       
         return recent_deaths
-
-      
