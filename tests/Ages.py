@@ -17,6 +17,17 @@ class Ages(unittest.TestCase):
             child_birth_date='24 JUL 2018',
         )
 
-
+    def test_marriage_after_14(self):
+        utils = Utils()
+        self.assertTrue(utils.marriage_after_14_(
+            husband_birth_date='24 JUL 1984',
+            wife_birth_date='25 JUL 1985',
+            marriage_date='24 JUN 2019',
+        ))
+        self.assertRaises(ValueError, utils.marriage_after_14, 
+            husband_birth_date='25 JUL 2016',
+            wife_birth_date='24 JUL 2013', 
+            marriage_date='24 JUL 2018',
+        )
 if __name__ == '__main__':
     unittest.main()
