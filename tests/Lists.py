@@ -5,10 +5,17 @@ from Utils import Utils
 
 class Lists(unittest.TestCase):
     pass
-    # def test_divorce_before_death(self):
-    #     utils = Utils()
-    #     self.assertTrue(utils.divorce_before_death('24 JUL 2018', '25 JUL 2018'))
-    #     self.assertRaises(ValueError, utils.divorce_before_death, '25 JUL 2018', '24 JUL 2018')
+    def list_recent_deaths(self):
+        utils = Utils()
+        self.assertTrue(utils.list_recent_deaths(
+            death_date='24 JUL 1984',
+            today_date='25 JUL 1984',
+        ))
+        self.assertRaises(ValueError, utils.list_recent_deaths, 
+            death_date='22 JUL 2013',
+            today_date='24 JUL 2015', 
+            
+        )
 
 
 if __name__ == '__main__':
