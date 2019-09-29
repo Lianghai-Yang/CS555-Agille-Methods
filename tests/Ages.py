@@ -19,15 +19,16 @@ class Ages(unittest.TestCase):
 
     def test_marriage_after_14(self):
         utils = Utils()
-        self.assertTrue(utils.marriage_after_14_(
+        self.assertTrue(utils.marriage_after_14(
             husband_birth_date='24 JUL 1984',
             wife_birth_date='25 JUL 1985',
-            marriage_date='24 JUN 2019',
+            marriage_date='24 JUN 2000',
         ))
-        self.assertRaises(ValueError, utils.marriage_after_14, 
-            husband_birth_date='25 JUL 2016',
+        self.assertRaises(ValueError, utils.marriage_after_14(
+            husband_birth_date='25 JUL 2012',
             wife_birth_date='24 JUL 2013', 
-            marriage_date='24 JUL 2018',
-        )
+            marriage_date='24 JUL 2020',
+        ))
+
 if __name__ == '__main__':
     unittest.main()
