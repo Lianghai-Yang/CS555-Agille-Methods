@@ -32,11 +32,11 @@ class Utils:
         md = datetime.strptime(marriage_date, _format)
 
         # check husband's birth date and wife's birth date
-        if (md - hbd).days > 14 * 365: 
+        if (md - hbd).days < 14 * 365: 
             raise ValueError("Husband should be 14 when he got married.")
 
         # check mother's birth date and child's
-        if (md - wbd).days > 14 * 365:
+        if (md - wbd).days < 14 * 365:
             raise ValueError("Wife should be 14 when she got married.")
 
         return True
