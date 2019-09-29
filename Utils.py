@@ -26,18 +26,26 @@ class Utils:
 
         return True
 
-    def marriage_after_14(self, husband_birth_date, wife_birth_date, marriage_date):
-        hbd = datetime.strptime(husband_birth_date, _format)
-        wbd = datetime.strptime(wife_birth_date, _format)
-        md = datetime.strptime(marriage_date, _format)
+    def marriage_after_14(self, families,people):
+        family_keys =  list(families.keys())
+        indi_keys = list(people.keys())
+        for id in family_keys:
+            family = families[id]
+            husband_id = family['HUSBAND ID']
+            wife_id = family['WFIE ID']
+            for idd in indi_keys:
+                indi = people[idd]
+                if husband_id == id: 
+                    hbd = datetime.strptime(indi['BIRT'], _format)
+                if wife_id == id:            
+                    wbd = datetime.strptime(indi['BIRT'], _format)
+                
+            md = datetime.strptime(family['MARR'], _format)
 
-        # check husband's birth date and wife's birth date
-        if (md - hbd).days < 14 * 365: 
-            raise ValueError("Husband should be 14 when he got married.")
-
-        # check mother's birth date and child's
-        if (md - wbd).days < 14 * 365:
-            raise ValueError("Wife should be 14 when she got married.")
+            if (md - hbd).days < 14 * 365: 
+                raise ValueError("Husband should be 14 when he got married.")
+            if (md - wbd).days < 14 * 365:
+                raise ValueError("Wife should be 14 when she got married.")
 
         return True
 
