@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 
 _format = '%d %b %Y'
 
@@ -25,3 +25,31 @@ class Utils:
             raise ValueError("Mother's birth date greater than 60 years older than her child.")
 
         return True
+
+    def marriage_after_14(self, husband_birth_date, wife_birth_date, marriage_date):
+        hbd = datetime.strptime(husband_birth_date, _format)
+        wbd = datetime.strptime(wife_birth_date, _format)
+        md = datetime.strptime(marriage_date, _format)
+
+        # check husband's birth date and wife's birth date
+        if (md - hbd).days > 14 * 365: 
+            raise ValueError("Husband should be 14 when he got married.")
+
+        # check mother's birth date and child's
+        if (md - wbd).days > 14 * 365:
+            raise ValueError("Wife should be 14 when she got married.")
+
+        return True
+
+    def list_recent_deaths(self,people):
+        recent_deaths = [];
+        for person in people:
+            if person['DEAT'] is not None:
+                today = datetime.today()
+                deaths_time = datetime.strptime(people['DEAT'],_format)
+                delta = today - deaths_time    
+                if delta <= timedelta(days=30):
+                    recent_deaths.append(person['ID'],person['DEAT'])
+        return recent_deaths
+
+      
