@@ -43,7 +43,7 @@ class Utils:
 
         return True
 
-    def list_recent_deaths(self,people):
+    def list_recent_deaths(self, people):
         recent_deaths = []
         indi_keys = list(people.keys())
        
@@ -56,4 +56,33 @@ class Utils:
                 if delta <= timedelta(days=30):
                     recent_deaths.append(id)
        
-        return recent_deaths
+        return sorted(recent_deaths)
+
+    def birth_before_marriage_of_parents(self, child_birth_date, marriage_date, divorce_date='N/A'):
+        cbd = datetime.strptime(child_birth_date, _format)
+        md  = datetime.strptime(marriage_date, _format)
+
+        if cbd < md:
+            raise ValueError('Child birth date should be after marriage of parents')
+
+        if divorce_date != 'N/A':
+            dd  = datetime.strptime(divorce_date, _format)
+            if cbd - dd > timedelta(days=30*9):
+                raise ValueError ('Child birth should not be more than 9 months after parents\' divorce')
+
+        return True
+
+    def list_living_married(self, people, families):
+        res = []
+         
+        for id in list(families.keys()):
+            family  = families[id]
+            husband = people[family['HUSB']]
+            wife    = people[family['WIFE']]
+            if husband['DEAT'] == 'N/A':
+                res.append(husband['ID'])
+            if wife['DEAT'] == 'N/A':
+                res.append(wife['ID'])
+            
+        return sorted(res)
+        
