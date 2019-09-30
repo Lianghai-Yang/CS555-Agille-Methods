@@ -3,7 +3,7 @@ sys.path.append('..')
 import unittest
 from Utils import Utils
 
-class Ages(unittest.TestCase):
+class TestAges(unittest.TestCase):
     def test_parents_not_too_old(self):
         utils = Utils()
         self.assertTrue(utils.parents_not_too_old(
@@ -37,6 +37,7 @@ class Ages(unittest.TestCase):
                 '@I2@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': '20 SEP 2017', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
             }
         )
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -4,7 +4,7 @@ import unittest
 from Utils import Utils, _format
 from datetime import datetime, timedelta
 
-class Lists(unittest.TestCase):
+class TestLists(unittest.TestCase):
     
     def test_list_recent_deaths(self):
         utils = Utils()
@@ -17,6 +17,7 @@ class Lists(unittest.TestCase):
             }),
             ['@I1@']
         )
+
 
 if __name__ == '__main__':
     unittest.main()
