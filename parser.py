@@ -27,8 +27,8 @@ def main():
             else:
                 lines.append(parsed_line)
     getRelationship()
-    printIndi()
-    printFamilies()
+    # printIndi()
+    # printFamilies()
 
 
 def parseLine(line):
@@ -85,7 +85,7 @@ def save(parsedLines):
             obj['DEAT'] = 'N/A'
         individuals[obj['ID']] = obj
     elif obj_type == 'FAM':
-        MISSING_FIELDS = ['DIV', 'CHIL']
+        MISSING_FIELDS = ['DIV', 'CHIL', 'MARR']
         for field in MISSING_FIELDS:
             if field not in obj:
                 obj[field] = 'N/A'
@@ -127,13 +127,12 @@ def printIndi():
             spouse = indi['HUSB']
         if 'CHIL' in indi:
             child = indi['CHIL']
-        print(spouse)
         tab.add_row([id, indi['NAME'], indi['SEX'], indi['BIRT'], indi['DEAT'], spouse, child])
     print(tab)
 
 def printFamilies():
     tab = pt.PrettyTable()
-    tab.field_names = ['ID', 'HUSBAND ID', 'HUSBAND NAME', 'WIFE ID', 'WIFE NAME', 'CHILDREN', 'DIVORCE']
+    tab.field_names = ['ID', 'HUSBAND ID', 'HUSBAND NAME', 'WIFE ID', 'WIFE NAME', 'CHILDREN', 'DIVORCE', 'MARRIAGE DATE']
     family_keys = list(families.keys())
     family_keys.sort(reverse=False)
     for id in family_keys:
@@ -145,8 +144,13 @@ def printFamilies():
             family['WIFE'],
             individuals[family['WIFE']]['NAME'],
             family['CHIL'],
-            family['DIV']
+            family['DIV'],
+            family['MARR']
         ])
     print(tab)
     
 main()
+
+if __name__ == "__main__":
+    printIndi()
+    printFamilies()
