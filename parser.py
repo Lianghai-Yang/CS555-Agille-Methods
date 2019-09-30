@@ -84,11 +84,15 @@ def save(parsedLines):
         if 'DEAT' not in obj:
             obj['DEAT'] = 'N/A'
         individuals[obj['ID']] = obj
+
     elif obj_type == 'FAM':
         MISSING_FIELDS = ['DIV', 'CHIL', 'MARR']
         for field in MISSING_FIELDS:
             if field not in obj:
-                obj[field] = 'N/A'
+                if field == 'CHIL':
+                    obj[field] = []
+                else:
+                    obj[field] = 'N/A'
         families[obj['ID']] = obj
 
 def getRelationship():
@@ -159,16 +163,37 @@ def valueCheck():
             husb = individuals[fami['HUSB']]
             wife = individuals[fami['WIFE']]
             kids = fami['CHIL']
+
             try:
                 utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
             except ValueError as e:
-                print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}'.format(fid=fid, iid=husb['ID']) + str(e))
+                printError(e, fid, husb['ID'])
                 
             try:
                 utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
             except ValueError as e:
-                print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}'.format(fid=fid, iid=wife['ID']) + str(e))
+                printError(e, fid, wife['ID'])
 
+            for kid in kids:
+                chil = individuals[kid]
+                try:
+                    utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
+                except ValueError as e:
+                    printError(e, fid=fid, iid=kid)
+                
+                try:
+                    utils.birth_before_marriage_of_parents(
+                        child_birth_date=chil['BIRT'],
+                        marriage_date=fami['MARR'],
+                        divorce_date=fami['DIV']
+                    )
+                except ValueError as e:
+                    printError(e, fid=fid, iid=kid)
+                
+def printError(e, fid, iid):
+    print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: '.format(fid=fid, iid=iid) + str(e))
+
+    
 main()
 
 if __name__ == "__main__":
