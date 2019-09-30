@@ -3,12 +3,21 @@ from datetime import datetime, timedelta
 _format = '%d %b %Y'
 
 class Utils:
+    def print_res(self, msg, res):
+        print(msg)
+        print(res)
+        print('-------------------------------------')
+    
     def divorce_before_death(self, divorce_time, death_time):
-        # to do valid the format of date
+        if divorce_time == 'N/A' or death_time == 'N/A':
+            return True
+
         death_time = datetime.strptime(death_time, _format)
         divorce_time = datetime.strptime(divorce_time, _format)
+
         if death_time.timestamp() - divorce_time.timestamp() < 0:
-            raise ValueError('Death Date before Divorce Date')
+            raise ValueError('US06: Death Date is not before Divorce Date')
+
         return True
 
     def parents_not_too_old(self, father_birth_date, mother_birth_date, child_birth_date):

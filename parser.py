@@ -1,6 +1,5 @@
 import prettytable as pt
-import Utils
-# from utils import divorce_before_death
+from Utils import Utils
 
 KEYWORDS = {
     '0': ('INDI', 'FAM', 'HEAD', 'TRLR', 'NOTE',),
@@ -8,6 +7,7 @@ KEYWORDS = {
     '2': ('DATE')
 }
 
+utils = Utils()
 individuals = {}
 families = {}
 
@@ -148,9 +148,31 @@ def printFamilies():
             family['MARR']
         ])
     print(tab)
+
+def listing():
+    utils.print_res(msg='Recent Deaths:', res=utils.list_recent_deaths(individuals))
+    utils.print_res(msg='Living Married:', res=utils.list_living_married(individuals, families))
     
+def valueCheck():
+        for fid in families:
+            fami = families[fid]
+            husb = individuals[fami['HUSB']]
+            wife = individuals[fami['WIFE']]
+            kids = fami['CHIL']
+            try:
+                utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
+            except ValueError as e:
+                print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}'.format(fid=fid, iid=husb['ID']) + str(e))
+                
+            try:
+                utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
+            except ValueError as e:
+                print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}'.format(fid=fid, iid=wife['ID']) + str(e))
+
 main()
 
 if __name__ == "__main__":
     printIndi()
     printFamilies()
+    listing()
+    valueCheck()
