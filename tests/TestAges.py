@@ -4,8 +4,9 @@ import unittest
 from Utils import Utils
 
 class TestAges(unittest.TestCase):
+    utils = Utils()
     def test_parents_not_too_old(self):
-        utils = Utils()
+        utils = self.utils
         self.assertTrue(utils.parents_not_too_old(
             father_birth_date='24 JUL 1984',
             mother_birth_date='25 JUL 1985',
@@ -18,7 +19,7 @@ class TestAges(unittest.TestCase):
         )
 
     def test_marriage_after_14(self):
-        utils = Utils()
+        utils = self.utils
         self.assertTrue(utils.marriage_after_14(
             families = {
                 '@F1@': {'ID': '@F1@', 'HUSB': '@I2@', 'WIFE': '@I1@', 'CHIL': ['@I3@', '@I5@'], 'DIV': 'N/A', 'MARR': '17 MAY 2001',},
