@@ -1,4 +1,4 @@
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 
 _format = '%d %b %Y'
 
@@ -26,26 +26,20 @@ class Utils:
 
         return True
 
-    def marriage_after_14(self, families,people):
+    def marriage_after_14(self, families, people):
         family_keys =  list(families.keys())
-        indi_keys = list(people.keys())
         for id in family_keys:
             family = families[id]
-            husband_id = family['HUSBAND ID']
-            wife_id = family['WFIE ID']
-            for idd in indi_keys:
-                indi = people[idd]
-                if husband_id == id: 
-                    hbd = datetime.strptime(indi['BIRT'], _format)
-                if wife_id == id:            
-                    wbd = datetime.strptime(indi['BIRT'], _format)
-                
+            husband_id = family['HUSB']
+            wife_id = family['WIFE']
+            wbd = datetime.strptime(people[wife_id]['BIRT'], _format)
+            hbd = datetime.strptime(people[husband_id]['BIRT'], _format)
             md = datetime.strptime(family['MARR'], _format)
 
             if (md - hbd).days < 14 * 365: 
-                raise ValueError("Husband should be 14 when he got married.")
+                raise ValueError("Husband should be greater than 14 when he got married.")
             if (md - wbd).days < 14 * 365:
-                raise ValueError("Wife should be 14 when she got married.")
+                raise ValueError("Wife should be greater than 14 when she got married.")
 
         return True
 
