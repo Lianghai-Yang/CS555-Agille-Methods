@@ -101,3 +101,42 @@ class Utils:
             
         return sorted(res)
         
+    def list_living_single(self, people, families):
+        living_single = []
+        marriaged = set()
+        for family in families:
+            fami = families[family]
+            if 'HUSB' in fami:
+                marriaged.add(fami['HUSB'])
+            if 'WIFE' in fami:
+                marriaged.add(fami['WIFE'])
+
+        for individual in people:
+            indi = people[individual]
+            if indi['ID'] != 'N/A' and indi['DEAT'] == 'N/A':
+                if indi['ID'] not in marriaged:
+                    living_single.append(indi['ID'])
+        
+        return sorted(living_single)
+    
+    def less_than_150(self, birth_time, death_time):
+        if birth_time == 'N/A':
+            raise ValueError('US07: Birth date should not be N/A')
+        birth_time = datetime.strptime(birth_time, _format)
+        if death_time == 'N/A':
+            today_time = datetime.today()
+            if (today_time - birth_time).days > 150 * 365:
+                raise ValueError('US07: Active living time should be less than 150 years')
+        else:
+            death_time = datetime.strptime(death_time, _format)
+            if(death_time - birth_time).days > 150 * 365:
+                raise ValueError('US07: Living time should be less than 150 years')
+        
+        return True
+
+
+
+
+
+
+        

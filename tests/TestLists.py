@@ -38,6 +38,23 @@ class TestLists(unittest.TestCase):
             sorted(['@I1@', '@I2@', '@I3@'])
         )
         
+    def test_list_living_single(self):
+        utils = self.utils
+        self.assertListEqual(
+            utils.list_living_single(
+                people = {
+                    "@I1@": {"ID": "@I1@","NAME": "Emme /Taylor/","SEX": "F","BIRT": "20 MAR 1949","DEAT": "N/A","FAMS": ["@F1@"]},
+                    "@I2@": {"ID": "@I2@","NAME": "John /Smith/","SEX": "M","BIRT": "8 APR 1946","DEAT": "12 MAY 2000","FAMS": ["@F1@"]},
+                    "@I3@": {"ID": "@I3@","NAME": "Emily /Smith/","SEX": "F","BIRT": "5 DEC 1970","FAMC": "@F1@","DEAT": "12 MAY 2000"},
+                    "@I4@": {"ID": "@I4@","NAME": "Emily /Smith/","SEX": "F","BIRT": "5 DEC 1970","FAMC": "@F1@","DEAT": "N/A"},
+                },
+                families = {
+                    "@F1@": {"ID": "@F1@","HUSB": "@I2@","WIFE": "@I1@","CHIL": ["@I3@","@I4@"],"DIV": "N/A","MARR": "12 MAY 1968"},
+                }
+            ),
+            sorted(["@I4@"])
+        )
+
 
 if __name__ == '__main__':
     unittest.main()

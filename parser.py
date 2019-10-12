@@ -156,6 +156,7 @@ def printFamilies():
 def listing():
     utils.print_res(msg='Recent Deaths:', res=utils.list_recent_deaths(individuals))
     utils.print_res(msg='Living Married:', res=utils.list_living_married(individuals, families))
+    utils.print_res(msg='Living Single:', res=utils.list_living_single(individuals,families))
     
 def valueCheck():
         for fid in families:
@@ -189,6 +190,14 @@ def valueCheck():
                     )
                 except ValueError as e:
                     printError(e, fid=fid, iid=kid)
+        
+        for individual in individuals:
+            indi = individuals[individual]
+            try:
+                utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
+            except ValueError as e:
+                printError(e, indi)
+
                 
 def printError(e, fid, iid):
     print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: '.format(fid=fid, iid=iid) + str(e))

@@ -30,6 +30,30 @@ class TestDates(unittest.TestCase):
             marriage_date='24 JUL 1990',
             divorce_date='24 JUL 1993',
         )
+    
+    def test_less_than_150(self):
+        utils = self.utils
+
+        self.assertTrue(utils.less_than_150(
+            birth_time='24 JUL 1994',
+            death_time='24 JUL 2019'
+        ))
+
+        self.assertTrue(utils.less_than_150(
+            birth_time='24 JUL 1994',
+            death_time='N/A'
+        ))
+        
+        self.assertRaises(ValueError, utils.less_than_150,
+            birth_time='24 JUL 1719',
+            death_time='N/A'
+        )
+
+        self.assertRaises(ValueError, utils.less_than_150,
+            birth_time='24 JUL 1719',
+            death_time='24 JUL 2019'
+        )
+        
 
 
 if __name__ == '__main__':
