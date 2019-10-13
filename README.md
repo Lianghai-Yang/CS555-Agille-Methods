@@ -4,7 +4,7 @@
 Run the following command under project folder to perform unit tests
 
 ```bash
-python3 -m unittest discover -s tests -p Test*.py -v
+python3 -m unittest discover -s tests -p "Test*.py" -v
 ```
 
 ## Format
