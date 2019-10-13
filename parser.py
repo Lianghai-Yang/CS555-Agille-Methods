@@ -11,6 +11,7 @@ utils = Utils()
 individuals = {}
 families = {}
 
+
 def main():
     path = input('input file path: ')
     with open(path) as f:
@@ -50,8 +51,8 @@ def parseLine(line):
 
     return parsed_line
 
-
 # Parsed line has structure like [[level, tag, arguments], [level, tag, arguments] ...]
+
 def save(parsedLines):
     obj = {}
     obj_type = None
@@ -95,6 +96,7 @@ def save(parsedLines):
                     obj[field] = 'N/A'
         families[obj['ID']] = obj
 
+
 def getRelationship():
     for id in families:
         family = families[id]
@@ -116,6 +118,7 @@ def getRelationship():
                     else:
                         individuals[iid][field] = [ id, ]
 
+
 def printIndi():
     tab = pt.PrettyTable()
     tab.field_names = ['ID', 'NAME', 'GENDER', 'BIRTH DATE', 'DEATH DAET', 'SPOUSE', 'CHILD']
@@ -133,6 +136,7 @@ def printIndi():
             child = indi['CHIL']
         tab.add_row([id, indi['NAME'], indi['SEX'], indi['BIRT'], indi['DEAT'], spouse, child])
     print(tab)
+
 
 def printFamilies():
     tab = pt.PrettyTable()
@@ -153,11 +157,13 @@ def printFamilies():
         ])
     print(tab)
 
+
 def listing():
     utils.print_res(msg='Recent Deaths:', res=utils.list_recent_deaths(individuals))
     utils.print_res(msg='Living Married:', res=utils.list_living_married(individuals, families))
     utils.print_res(msg='Living Single:', res=utils.list_living_single(individuals,families))
-    
+
+
 def valueCheck():
         for fid in families:
             fami = families[fid]
@@ -169,7 +175,7 @@ def valueCheck():
                 utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
             except ValueError as e:
                 printError(e, fid, husb['ID'])
-                
+
             try:
                 utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
             except ValueError as e:
@@ -181,7 +187,7 @@ def valueCheck():
                     utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
                 except ValueError as e:
                     printError(e, fid=fid, iid=kid)
-                
+
                 try:
                     utils.birth_before_marriage_of_parents(
                         child_birth_date=chil['BIRT'],
@@ -190,19 +196,20 @@ def valueCheck():
                     )
                 except ValueError as e:
                     printError(e, fid=fid, iid=kid)
-        
+
+        # TODO: CHECK THE FUNCTION printError
         for individual in individuals:
             indi = individuals[individual]
             try:
                 utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
             except ValueError as e:
-                printError(e, indi)
+                printError(e, indi, iid=individual)
 
-                
+
 def printError(e, fid, iid):
     print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: '.format(fid=fid, iid=iid) + str(e))
 
-    
+
 main()
 
 if __name__ == "__main__":
