@@ -130,12 +130,43 @@ class Utils:
         else:
             death_time = datetime.strptime(death_time, _format)
             if(death_time - birth_time).days > 150 * 365:
-                raise ValueError('US07: Living time should be less than 150 years')
-        
+                raise ValueError('US07: Living time should be less than 150 years')        
         return True
 
 
 
+    def list_recent_birth(self, people):
+        recent_birth = []
+        indi_keys = list(people.keys())
+       
+        for id in indi_keys:
+           indi = people[id]
+           if indi['DEAT'] == 'N/A':
+                today = datetime.today()
+                birth_time = datetime.strptime(indi['BIRT'],_format)
+                delta = today - birth_time    
+                if delta <= timedelta(days=30):
+                    recent_birth.append(id)
+       
+        return sorted(recent_birth)
+
+    #US38   
+    def list_upcoming_birthdays(self, people):
+        upcoming_birthdays = []
+        indi_keys = list(people.keys())
+       
+        for id in indi_keys:
+           indi = people[id]
+           if indi['DEAT'] == 'N/A':
+                today = datetime.today()               
+                birthday_time = datetime.strptime(indi['BIRT'],_format)
+                birthday_date = datetime(today.year,birthday_time.month, birthday_time.day)
+                delta = birthday_date - today
+                if birthday_date > today and delta < timedelta(days = 30):
+                    upcoming_birthdays.append(id)
+       
+        return sorted(upcoming_birthdays)
+ 
 
 
 
