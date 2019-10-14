@@ -162,47 +162,53 @@ def listing():
     utils.print_res(msg='Recent Deaths:', res=utils.list_recent_deaths(individuals))
     utils.print_res(msg='Living Married:', res=utils.list_living_married(individuals, families))
     utils.print_res(msg='Living Single:', res=utils.list_living_single(individuals,families))
+    utils.print_res(msg='Recent births:', res=utils.list_recent_birth(individuals))
+    utils.print_res(msg='upcoming births:', res=utils.list_upcoming_birthdays(individuals))
 
 
 def valueCheck():
-        for fid in families:
-            fami = families[fid]
-            husb = individuals[fami['HUSB']]
-            wife = individuals[fami['WIFE']]
-            kids = fami['CHIL']
+    # Check Families
+    print('\n--------Checking Families------------')
+    for fid in families:
+        fami = families[fid]
+        husb = individuals[fami['HUSB']]
+        wife = individuals[fami['WIFE']]
+        kids = fami['CHIL']
+
+        try:
+            utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
+        except ValueError as e:
+            printError(e, fid, husb['ID'])
+
+        try:
+            utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
+        except ValueError as e:
+            printError(e, fid, wife['ID'])
+
+        for kid in kids:
+            chil = individuals[kid]
+            try:
+                utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
+            except ValueError as e:
+                printError(e, fid=fid, iid=kid)
 
             try:
-                utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
+                utils.birth_before_marriage_of_parents(
+                    child_birth_date=chil['BIRT'],
+                    marriage_date=fami['MARR'],
+                    divorce_date=fami['DIV']
+                )
             except ValueError as e:
-                printError(e, fid, husb['ID'])
+                printError(e, fid=fid, iid=kid)
 
-            try:
-                utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
-            except ValueError as e:
-                printError(e, fid, wife['ID'])
-
-            for kid in kids:
-                chil = individuals[kid]
-                try:
-                    utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
-                except ValueError as e:
-                    printError(e, fid=fid, iid=kid)
-
-                try:
-                    utils.birth_before_marriage_of_parents(
-                        child_birth_date=chil['BIRT'],
-                        marriage_date=fami['MARR'],
-                        divorce_date=fami['DIV']
-                    )
-                except ValueError as e:
-                    printError(e, fid=fid, iid=kid)
-
-        for individual in individuals:
-            indi = individuals[individual]
-            try:
-                utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
-            except ValueError as e:
-                printError(e, indi, iid=individual)
+    # Check Individuals
+    print('\n--------Checking Individuals---------')
+    for individual in individuals:
+        indi = individuals[individual]
+        try:
+            utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
+        except ValueError as e:
+            printError(e, fid=None, iid=individual)
 
 
 def printError(e, fid=None, iid=None):
