@@ -51,8 +51,8 @@ def parseLine(line):
 
     return parsed_line
 
-# Parsed line has structure like [[level, tag, arguments], [level, tag, arguments] ...]
 
+# Parsed line has structure like [[level, tag, arguments], [level, tag, arguments] ...]
 def save(parsedLines):
     obj = {}
     obj_type = None
@@ -197,7 +197,6 @@ def valueCheck():
                 except ValueError as e:
                     printError(e, fid=fid, iid=kid)
 
-        # TODO: CHECK THE FUNCTION printError
         for individual in individuals:
             indi = individuals[individual]
             try:
@@ -206,8 +205,17 @@ def valueCheck():
                 printError(e, indi, iid=individual)
 
 
-def printError(e, fid, iid):
-    print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: '.format(fid=fid, iid=iid) + str(e))
+def printError(e, fid=None, iid=None):
+    family_info, individual_info = '', ''
+    if fid is not None:
+        family_info = ' \t FAMILIES: {fid}'.format(fid=fid)
+    if iid is not None:
+        individual_info = ' \t INDIVIDUAL: {iid}'.format(iid=iid)
+    print('Error:{FAMILY}{INDIVIDUAL} \t {e}'.format(
+        FAMILY=family_info,
+        INDIVIDUAL=individual_info,
+        e=str(e)
+    ))
 
 
 main()
