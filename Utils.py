@@ -71,27 +71,24 @@ class Utils:
         return True
 
 
-    # US10
-    def marriage_after_14(self, families, people):
-        family_keys =  list(families.keys())
-        for id in family_keys:
-            family = families[id]
-            husband_id = family['HUSB']
-            wife_id = family['WIFE']
-            wbd = datetime.strptime(people[wife_id]['BIRT'], _format)
-            hbd = datetime.strptime(people[husband_id]['BIRT'], _format)
-            if family['MARR'] == 'N/A':
-                return True
+   # US10
+    def marriage_after_14(self, husband_birth_date, wife_birth_date, marriage_date):
+        hbd = datetime.strptime(husband_birth_date, _format)
+        wbd = datetime.strptime(wife_birth_date, _format)
+        md = datetime.strptime(marriage_date, _format)
 
-            md = datetime.strptime(family['MARR'], _format)
-
-            if (md - hbd).days < 14 * 365:
-                raise ValueError("US10: Husband should be greater than 14 when he got married. - INFO Husband birth date {}\n".format(people[husband_id]['BIRT']))
-            if (md - wbd).days < 14 * 365:
-                raise ValueError("US10: Wife should be greater than 14 when she got married. - INFO Wife birth date {}\n".format(people[wife_id]['BIRT']))
+        if (md - hbd).days < 14 * 365:
+            raise ValueError("US10: Husband should be greater than 14 when he got married. - INFO Husband birth date='{husband_birth_date}', marriage_date = '{marriage_date}'\n".format(
+                husband_birth_date=husband_birth_date,
+                marriage_date = marriage_date,
+                ))
+        if (md - wbd).days < 14 * 365:
+            raise ValueError("US10: Wife should be greater than 14 when she got married. - INFO Wife birth date='{wife_birth_date}', marriage_date = '{marriage_date}'\n".format(
+                wife_birth_date=wife_birth_date,
+                marriage_date = marriage_date,
+                ))
 
         return True
-
 
     # US36
     def list_recent_deaths(self, people):
