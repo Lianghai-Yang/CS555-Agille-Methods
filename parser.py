@@ -34,20 +34,20 @@ def main():
 
 def parseLine(line):
     parsed_line = line.split(' ', 2)
-    swap = False
-    valid = 'N'
+    # swap = False
+    # valid = 'N'
 
     if len(parsed_line) == 3 and parsed_line[2] in ('INDI', "FAM"):
         tmp = parsed_line[2]
         parsed_line[2] = parsed_line[1]
         parsed_line[1] = tmp
-        swap = True
+        # swap = True
 
-    if parsed_line[0] in KEYWORDS.keys() and parsed_line[1] in KEYWORDS[parsed_line[0]]:
-        valid = 'Y'
+    # if parsed_line[0] in KEYWORDS.keys() and parsed_line[1] in KEYWORDS[parsed_line[0]]:
+    #     valid = 'Y'
 
-    if parsed_line[1] in ('INDI', 'FAM') and swap is False:
-        valid = 'N'
+    # if parsed_line[1] in ('INDI', 'FAM') and swap is False:
+    #     valid = 'N'
 
     return parsed_line
 
@@ -159,11 +159,11 @@ def printFamilies():
 
 
 def listing():
-    utils.print_res(msg='Recent Deaths:', res=utils.list_recent_deaths(individuals))
-    utils.print_res(msg='Living Married:', res=utils.list_living_married(individuals, families))
-    utils.print_res(msg='Living Single:', res=utils.list_living_single(individuals,families))
-    utils.print_res(msg='Recent births:', res=utils.list_recent_birth(individuals))
-    utils.print_res(msg='upcoming births:', res=utils.list_upcoming_birthdays(individuals))
+    utils.print_res(msg='US36 - Recent Deaths:', res=utils.list_recent_deaths(individuals))
+    utils.print_res(msg='US30 - Living Married:', res=utils.list_living_married(individuals, families))
+    utils.print_res(msg='US31 - Living Single:', res=utils.list_living_single(individuals,families))
+    utils.print_res(msg='US36 - Recent births:', res=utils.list_recent_birth(individuals))
+    utils.print_res(msg='US38 - upcoming births:', res=utils.list_upcoming_birthdays(individuals))
 
 
 def valueCheck():
