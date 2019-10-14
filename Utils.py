@@ -40,7 +40,10 @@ class Utils:
         divorce_time = datetime.strptime(divorce_time, _format)
 
         if death_time.timestamp() - divorce_time.timestamp() < 0:
-            raise ValueError('US06: Death Date is not before Divorce Date')
+            raise ValueError('US06: Death Date is not before Divorce Date \n\t- Detail: divorce_time="{divorce_time}",="{death_time}"\n'.format(
+                divorce_time=divorce_time,
+                death_time=death_time
+            ))
 
         return True
 
@@ -53,11 +56,17 @@ class Utils:
 
         # check father's birth date and child's
         if (cbd - fbd).days > 80 * 365:
-            raise ValueError("US12: Father's birth date greater than 80 years older than his child.")
+            raise ValueError("US12: Father's birth date greater than 80 years older than his child. \n\t- Detail: father_birth_date=\"{father_birth_date}\", child_birth_date=\"{child_birth_date}\"\n".format(
+                father_birth_date=father_birth_date,
+                child_birth_date=child_birth_date,
+            ))
 
         # check mother's birth date and child's
         if (cbd - mbd).days > 60 * 365:
-            raise ValueError("US12: Mother's birth date greater than 60 years older than her child.")
+            raise ValueError("US12: Mother's birth date greater than 60 years older than her child. \n\t- Detail: mother_birth_date=\"{mother_birth_date}\", child_birth_date=\"{child_birth_date}\"\n".format(
+                mother_birth_date=father_birth_date,
+                child_birth_date=child_birth_date,
+            ))
 
         return True
 
@@ -77,9 +86,9 @@ class Utils:
             md = datetime.strptime(family['MARR'], _format)
 
             if (md - hbd).days < 14 * 365:
-                raise ValueError("Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: US10: Husband should be greater than 14 when he got married.".format(fid=id, iid=husband_id))
+                raise ValueError("US10: Husband should be greater than 14 when he got married. - INFO Husband birth date {}\n".format(people[husband_id]['BIRT']))
             if (md - wbd).days < 14 * 365:
-                raise ValueError("Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: US10: Wife should be greater than 14 when she got married.".format(fid=id, iid=wife_id))
+                raise ValueError("US10: Wife should be greater than 14 when she got married. - INFO Wife birth date {}\n".format(people[wife_id]['BIRT']))
 
         return True
 
@@ -104,19 +113,27 @@ class Utils:
     # US08
     def birth_before_marriage_of_parents(self, child_birth_date, marriage_date, divorce_date='N/A'):
         if marriage_date == 'N/A':
-            raise ValueError('US08: Child birth date should be after marriage of parents')
+            raise ValueError('US08: Child birth date should be after marriage of parents \n\t- Detail: child_birth_date="{child_birth_date}", marriage_date="{marriage_date}"\n'.format(
+                child_birth_date=child_birth_date,
+                marriage_date=marriage_date
+            ))
 
         cbd = datetime.strptime(child_birth_date, _format)
         md  = datetime.strptime(marriage_date, _format)
 
         if cbd < md:
-            raise ValueError('US08: Child birth date should be after marriage of parents')
+            raise ValueError('US08: Child birth date should be after marriage of parents \n\t- Detail: child_birth_date="{child_birth_date}", marriage_date="{marriage_date}"\n'.format(
+                child_birth_date=child_birth_date,
+                marriage_date=marriage_date
+            ))
 
         if divorce_date != 'N/A':
             dd  = datetime.strptime(divorce_date, _format)
             if cbd - dd > timedelta(days=30*9):
-                raise ValueError('US08: Child birth should not be more than 9 months after parents\' divorce')
-
+                raise ValueError('US08: Child birth should not be more than 9 months after parents\' divorce \n\t- Detail: child_birth_date="{child_birth_date}", divorce_date="{divorce_date}"\n'.format(
+                    child_birth_date=child_birth_date,
+                    divorce_date=divorce_date
+                ))
         return True
 
 
@@ -164,11 +181,16 @@ class Utils:
         if death_time == 'N/A':
             today_time = datetime.today()
             if (today_time - birth_time).days > 150 * 365:
-                raise ValueError('US07: Active living time should be less than 150 years')
+                raise ValueError('US07: Active living time should be less than 150 years \n\t- Detail: birth_time="{birth_time}"\n'.format(
+                    birth_time=birth_time
+                ))
         else:
             death_time = datetime.strptime(death_time, _format)
             if(death_time - birth_time).days > 150 * 365:
-                raise ValueError('US07: Living time should be less than 150 years')
+                raise ValueError('US07: Living time should be less than 150 years \n\t- Detail: birth_time="{birth_time}", death_time="{death_time}"\n'.format(
+                    birth_time=birth_time,
+                    death_time=death_time
+                ))
         return True
 
 
@@ -220,7 +242,10 @@ class Utils:
             and
             self.compare_dates(father_death_date, child_birth_date) < 0
         ):
-            raise ValueError('US09: Father\'s death date should be after birth date of child')
+            raise ValueError('US09: Father\'s death date should be after birth date of child \n\t- Detail: child_birth_date="{child_birth_date}", father_death_date="{father_death_date}"\n'.format(
+                child_birth_date=child_birth_date,
+                father_death_date=father_death_date,
+            ))
 
         if (
             mother_death_date is not None
@@ -229,7 +254,10 @@ class Utils:
             and
             self.compare_dates(mother_death_date, child_birth_date) < 0
         ):
-            raise ValueError('US09: Mother\'s death date should be after birth date of child')
+            raise ValueError('US09: Mother\'s death date should be after birth date of child \n\t- Detail: mother_death_date="{mother_death_date}", child_birth_date="{child_birth_date}"\n'.format(
+                mother_death_date=mother_death_date,
+                child_birth_date=child_birth_date,
+            ))
 
         return True
 
@@ -241,6 +269,9 @@ class Utils:
         @Return: True if the birth date is before the marriage date
         '''
         if marriage_date is not None and marriage_date != 'N/A' and self.compare_dates(birth_date, marriage_date) > 0:
-            raise ValueError('US02: Birth date should be before marriage date')
+            raise ValueError('US02: Birth date should be before marriage date \n\t- Detail: birth_date="{birth_date}", marriage_date="{marriage_date}"\n'.format(
+                birth_date=birth_date,
+                marriage_date=marriage_date,
+            ))
 
         return True
