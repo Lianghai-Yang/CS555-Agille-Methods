@@ -11,6 +11,7 @@ utils = Utils()
 individuals = {}
 families = {}
 
+
 def main():
     path = input('input file path: ')
     with open(path) as f:
@@ -33,20 +34,20 @@ def main():
 
 def parseLine(line):
     parsed_line = line.split(' ', 2)
-    swap = False
-    valid = 'N'
+    # swap = False
+    # valid = 'N'
 
     if len(parsed_line) == 3 and parsed_line[2] in ('INDI', "FAM"):
         tmp = parsed_line[2]
         parsed_line[2] = parsed_line[1]
         parsed_line[1] = tmp
-        swap = True
+        # swap = True
 
-    if parsed_line[0] in KEYWORDS.keys() and parsed_line[1] in KEYWORDS[parsed_line[0]]:
-        valid = 'Y'
+    # if parsed_line[0] in KEYWORDS.keys() and parsed_line[1] in KEYWORDS[parsed_line[0]]:
+    #     valid = 'Y'
 
-    if parsed_line[1] in ('INDI', 'FAM') and swap is False:
-        valid = 'N'
+    # if parsed_line[1] in ('INDI', 'FAM') and swap is False:
+    #     valid = 'N'
 
     return parsed_line
 
@@ -95,6 +96,7 @@ def save(parsedLines):
                     obj[field] = 'N/A'
         families[obj['ID']] = obj
 
+
 def getRelationship():
     for id in families:
         family = families[id]
@@ -116,6 +118,7 @@ def getRelationship():
                     else:
                         individuals[iid][field] = [ id, ]
 
+
 def printIndi():
     tab = pt.PrettyTable()
     tab.field_names = ['ID', 'NAME', 'GENDER', 'BIRTH DATE', 'DEATH DAET', 'SPOUSE', 'CHILD']
@@ -133,6 +136,7 @@ def printIndi():
             child = indi['CHIL']
         tab.add_row([id, indi['NAME'], indi['SEX'], indi['BIRT'], indi['DEAT'], spouse, child])
     print(tab)
+
 
 def printFamilies():
     tab = pt.PrettyTable()
@@ -153,56 +157,74 @@ def printFamilies():
         ])
     print(tab)
 
+
 def listing():
-    utils.print_res(msg='Recent Deaths:', res=utils.list_recent_deaths(individuals))
-    utils.print_res(msg='Living Married:', res=utils.list_living_married(individuals, families))
-    utils.print_res(msg='Living Single:', res=utils.list_living_single(individuals,families))
-    
+    id_to_name = lambda ids: list(map(lambda x: individuals[x]['NAME'], ids))
+    utils.print_res(msg='US36 - Recent Deaths:', res=id_to_name(utils.list_recent_deaths(individuals)))
+    utils.print_res(msg='US30 - Living Married:', res=id_to_name(utils.list_living_married(individuals, families)))
+    utils.print_res(msg='US31 - Living Single:', res=id_to_name(utils.list_living_single(individuals,families)))
+    utils.print_res(msg='US35 - Recent births:', res=id_to_name(utils.list_recent_birth(individuals)))
+    utils.print_res(msg='US38 - upcoming births:', res=id_to_name(utils.list_upcoming_birthdays(individuals)))
+
+
 def valueCheck():
-        for fid in families:
-            fami = families[fid]
-            husb = individuals[fami['HUSB']]
-            wife = individuals[fami['WIFE']]
-            kids = fami['CHIL']
+    # Check Families
+    print('\n--------Checking Families------------')
+    for fid in families:
+        fami = families[fid]
+        husb = individuals[fami['HUSB']]
+        wife = individuals[fami['WIFE']]
+        kids = fami['CHIL']
+
+        try:
+            utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
+        except ValueError as e:
+            printError(e, fid, husb['ID'])
+
+        try:
+            utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
+        except ValueError as e:
+            printError(e, fid, wife['ID'])
+
+        for kid in kids:
+            chil = individuals[kid]
+            try:
+                utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
+            except ValueError as e:
+                printError(e, fid=fid, iid=kid)
 
             try:
-                utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
+                utils.birth_before_marriage_of_parents(
+                    child_birth_date=chil['BIRT'],
+                    marriage_date=fami['MARR'],
+                    divorce_date=fami['DIV']
+                )
             except ValueError as e:
-                printError(e, fid, husb['ID'])
-                
-            try:
-                utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
-            except ValueError as e:
-                printError(e, fid, wife['ID'])
+                printError(e, fid=fid, iid=kid)
 
-            for kid in kids:
-                chil = individuals[kid]
-                try:
-                    utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
-                except ValueError as e:
-                    printError(e, fid=fid, iid=kid)
-                
-                try:
-                    utils.birth_before_marriage_of_parents(
-                        child_birth_date=chil['BIRT'],
-                        marriage_date=fami['MARR'],
-                        divorce_date=fami['DIV']
-                    )
-                except ValueError as e:
-                    printError(e, fid=fid, iid=kid)
-        
-        for individual in individuals:
-            indi = individuals[individual]
-            try:
-                utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
-            except ValueError as e:
-                printError(e, indi)
+    # Check Individuals
+    print('\n--------Checking Individuals---------')
+    for individual in individuals:
+        indi = individuals[individual]
+        try:
+            utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
+        except ValueError as e:
+            printError(e, fid=None, iid=individual)
 
-                
-def printError(e, fid, iid):
-    print('Error: FAMILIES: {fid}: INDIVIDUALS: {iid}: '.format(fid=fid, iid=iid) + str(e))
 
-    
+def printError(e, fid=None, iid=None):
+    family_info, individual_info = '', ''
+    if fid is not None:
+        family_info = ' \t FAMILIES: {fid}'.format(fid=fid)
+    if iid is not None:
+        individual_info = ' \t INDIVIDUAL: {iid}'.format(iid=iid)
+    print('Error:{FAMILY}{INDIVIDUAL} \t {e}'.format(
+        FAMILY=family_info,
+        INDIVIDUAL=individual_info,
+        e=str(e)
+    ))
+
+
 main()
 
 if __name__ == "__main__":

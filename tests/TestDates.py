@@ -54,7 +54,56 @@ class TestDates(unittest.TestCase):
             death_time='24 JUL 2019'
         )
         
+    def test_birth_before_death_of_parents(self):
+        utils = self.utils
 
+        self.assertTrue(utils.birth_before_death_of_parents(
+            father_death_date   = '04 JUL 2000',
+            mother_death_date   = '12 AUG 2010',
+            child_birth_date    = '24 MAR 1962'
+        ))
+
+        self.assertTrue(utils.birth_before_death_of_parents(
+            father_death_date   = '04 JUL 2000',
+            mother_death_date   = 'N/A',
+            child_birth_date    = '24 MAR 1962'
+        ))
+
+        self.assertTrue(utils.birth_before_death_of_parents(
+            father_death_date   = 'N/A',
+            mother_death_date   = '12 AUG 2010',
+            child_birth_date    = '24 MAR 1962'
+        ))
+
+        self.assertRaises(ValueError, utils.birth_before_death_of_parents,
+            father_death_date   = '04 JUL 1900',
+            mother_death_date   = '12 AUG 2010',
+            child_birth_date    = '24 MAR 1962'
+        )
+
+        self.assertRaises(ValueError, utils.birth_before_death_of_parents,
+            father_death_date   = '04 JUL 2000',
+            mother_death_date   = '12 AUG 1940',
+            child_birth_date    = '24 MAR 1962'
+        )
+
+    def test_birth_before_marriage(self):
+        utils = self.utils
+
+        self.assertTrue(utils.birth_before_marriage(
+            birth_date      = '01 JAN 1984',
+            marriage_date   = '01 JAN 2018',
+        ))
+
+        self.assertTrue(utils.birth_before_marriage(
+            birth_date      = '01 JAN 1984',
+            marriage_date   = 'N/A',
+        ))
+
+        self.assertRaises(ValueError, utils.birth_before_marriage,
+            birth_date      = '01 JAN 1999',
+            marriage_date   = '01 JAN 1982'
+        )
 
 if __name__ == '__main__':
     unittest.main()
