@@ -159,11 +159,12 @@ def printFamilies():
 
 
 def listing():
-    utils.print_res(msg='US36 - Recent Deaths:', res=utils.list_recent_deaths(individuals))
-    utils.print_res(msg='US30 - Living Married:', res=utils.list_living_married(individuals, families))
-    utils.print_res(msg='US31 - Living Single:', res=utils.list_living_single(individuals,families))
-    utils.print_res(msg='US36 - Recent births:', res=utils.list_recent_birth(individuals))
-    utils.print_res(msg='US38 - upcoming births:', res=utils.list_upcoming_birthdays(individuals))
+    id_to_name = lambda ids: list(map(lambda x: individuals[x]['NAME'], ids))
+    utils.print_res(msg='US36 - Recent Deaths:', res=id_to_name(utils.list_recent_deaths(individuals)))
+    utils.print_res(msg='US30 - Living Married:', res=id_to_name(utils.list_living_married(individuals, families)))
+    utils.print_res(msg='US31 - Living Single:', res=id_to_name(utils.list_living_single(individuals,families)))
+    utils.print_res(msg='US36 - Recent births:', res=id_to_name(utils.list_recent_birth(individuals)))
+    utils.print_res(msg='US38 - upcoming births:', res=id_to_name(utils.list_upcoming_birthdays(individuals)))
 
 
 def valueCheck():
