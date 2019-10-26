@@ -185,6 +185,22 @@ def valueCheck():
             utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
         except ValueError as e:
             printError(e, fid, wife['ID'])
+        
+        try:
+            utils.marriage_before_death(marriage_date=fami['MARR'], death_date=husb['DEAT'])
+        except ValueError as e:
+            printError(e, fid, husb['ID'])
+        
+        try:
+            utils.marriage_before_death(marriage_date=fami['MARR'], death_date=wife['DEAT'])
+        except ValueError as e:
+            printError(e, fid, wife['ID'])
+        
+        try:
+            utils.marriage_before_divorce(marriage_date=fami['MARR'], divorce_date=fami['DIV'])
+        except ValueError as e:
+            printError(e, fid=fid)
+        
 
         for kid in kids:
             chil = individuals[kid]

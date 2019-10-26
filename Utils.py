@@ -272,3 +272,23 @@ class Utils:
             ))
 
         return True
+    
+    # US04
+    def marriage_before_divorce(self, marriage_date, divorce_date):
+        if marriage_date is not None and marriage_date != 'N/A' and divorce_date is not None and divorce_date != 'N/A' and self.compare_dates(marriage_date, divorce_date) > 0: 
+            raise ValueError('US04: Divorce date should be before marriage date \n\t- Detail: marriage_date="{marriage_date}", divorce_date="{divorce_date}"\n'.format(
+                marriage_date=marriage_date,
+                divorce_date=divorce_date,
+            ))
+
+        return True
+    
+    # US05
+    def marriage_before_death(self, marriage_date, death_date):
+        if marriage_date is not None and marriage_date != 'N/A' and death_date is not None and death_date != 'N/A' and self.compare_dates(marriage_date, death_date) > 0 :
+            raise ValueError('US05: Marriage date should be before death date \n\t- Detail: marriage_date="{marriage_date}", death_date="{death_date}"\n'.format(
+                marriage_date=marriage_date,
+                death_date=death_date,
+            ))
+            
+        return True
