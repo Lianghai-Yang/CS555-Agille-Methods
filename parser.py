@@ -165,8 +165,8 @@ def listing():
     utils.print_res(msg='US31 - Living Single:', res=id_to_name(utils.list_living_single(individuals,families)))
     utils.print_res(msg='US35 - Recent births:', res=id_to_name(utils.list_recent_birth(individuals)))
     utils.print_res(msg='US38 - upcoming births:', res=id_to_name(utils.list_upcoming_birthdays(individuals)))
-
-
+    utils.print_res(msg='US29 - deceased individuals:', res=id_to_name(utils.list_deceased(individuals)))
+    utils.print_res(msg='US34 - large age differences:', res=id_to_name(utils.list_large_age_differences(individuals,families)))
 def valueCheck():
     # Check Families
     print('\n--------Checking Families------------')

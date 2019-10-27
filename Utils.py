@@ -292,3 +292,38 @@ class Utils:
             ))
             
         return True
+
+    # US29
+    def list_deceased(self, people):
+        deceased = []
+        indi_keys = list(people.keys())
+
+        for id in indi_keys:
+           indi = people[id]
+           if indi['DEAT'] != 'N/A':
+                deceased.append(id)
+
+        return sorted(deceased)
+
+    
+   # US34
+    def list_large_age_differences(self, people, families):
+        res = []
+
+        for id in list(families.keys()):
+            family  = families[id]
+            husband = people[family['HUSB']]
+            wife    = people[family['WIFE']]
+           
+
+            husband_birth = datetime.strptime(husband['BIRT'],_format)
+            wife_birth = datetime.strptime(wife['BIRT'],_format)
+            today_time = datetime.today()
+            
+            husband_age = today_time - wife_birth
+            wife_age = today_time - husband_birth 
+            if ((husband_age - wife_age).days > (wife_age).days) or ((wife_age - husband_age).days > (husband_age).days): 
+                res.append(husband['ID'])
+                res.append(wife['ID'])
+
+        return sorted(res)
