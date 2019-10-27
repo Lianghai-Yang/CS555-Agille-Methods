@@ -20,24 +20,39 @@ class TestAges(unittest.TestCase):
 
     def test_marriage_after_14(self):
         utils = self.utils
-        self.assertTrue(utils.marriage_after_14(
-            families = {
-                '@F1@': {'ID': '@F1@', 'HUSB': '@I2@', 'WIFE': '@I1@', 'CHIL': ['@I3@', '@I5@'], 'DIV': 'N/A', 'MARR': '17 MAY 2001',},
-            },
-            people = {
-                '@I1@': {'ID': '@I1@', 'NAME': 'Tim /James/', 'SEX': 'M', 'BIRT': '12 APR 1970', 'FAMC': '@F2@', 'DEAT': '24 SEP 2018', 'HUSB': ['@F1@'], 'CHIL': ['@F2@']},
-                '@I2@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': '20 SEP 2017', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
-            })
-        )
-        self.assertRaises(ValueError, utils.marriage_after_14,
-            families = {
-                '@F1@': {'ID': '@F1@', 'HUSB': '@I2@', 'WIFE': '@I1@', 'CHIL': ['@I3@', '@I5@'], 'DIV': 'N/A', 'MARR': '17 MAY 1973',},
-            },
-            people = {
-                '@I1@': {'ID': '@I1@', 'NAME': 'Tim /James/', 'SEX': 'M', 'BIRT': '12 APR 1970', 'FAMC': '@F2@', 'DEAT': '24 SEP 2018', 'HUSB': ['@F1@'], 'CHIL': ['@F2@']},
-                '@I2@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': '20 SEP 2017', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
-            }
-        )
+        families = {
+            '@F1@': {'ID': '@F1@', 'HUSB': '@I2@', 'WIFE': '@I1@', 'CHIL': ['@I3@', '@I5@'], 'DIV': 'N/A', 'MARR': '17 MAY 2001',},
+        }
+
+        people = {
+            '@I1@': {'ID': '@I1@', 'NAME': 'Tim /James/', 'SEX': 'M', 'BIRT': '12 APR 1970', 'FAMC': '@F2@', 'DEAT': '24 SEP 2018', 'HUSB': ['@F1@'], 'CHIL': ['@F2@']},
+            '@I2@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': '20 SEP 2017', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
+        }
+
+        for fid in families:
+            fami = families[fid]
+            self.assertTrue(utils.marriage_after_14(
+                husband_birth_date=people[fami['HUSB']]['BIRT'],
+                wife_birth_date=people[fami['WIFE']]['BIRT'],
+                marriage_date=fami['MARR']
+            ))
+
+        families = {
+            '@F1@': {'ID': '@F1@', 'HUSB': '@I2@', 'WIFE': '@I1@', 'CHIL': ['@I3@', '@I5@'], 'DIV': 'N/A', 'MARR': '17 MAY 1973',},
+        }
+
+        people = {
+            '@I1@': {'ID': '@I1@', 'NAME': 'Tim /James/', 'SEX': 'M', 'BIRT': '12 APR 1970', 'FAMC': '@F2@', 'DEAT': '24 SEP 2018', 'HUSB': ['@F1@'], 'CHIL': ['@F2@']},
+            '@I2@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': '20 SEP 2017', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
+        }
+
+        for fid in families:
+            fami = families[fid]
+            self.assertRaises(ValueError, utils.marriage_after_14,
+                husband_birth_date=people[fami['HUSB']]['BIRT'],
+                wife_birth_date=people[fami['WIFE']]['BIRT'],
+                marriage_date=fami['MARR']
+            )
 
 
 if __name__ == '__main__':
