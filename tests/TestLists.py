@@ -12,7 +12,7 @@ class TestLists(unittest.TestCase):
         before_days = (datetime.today() - timedelta(days=20)).strftime(_format)
         self.assertListEqual(utils.list_recent_deaths(
             people = {
-                '@I1@': {'ID': '@I1@', 'NAME': 'Tim /James/', 'SEX': 'M', 'BIRT': before_days, 'FAMC': '@F2@', 'DEAT': '24 SEP 2019', 'HUSB': ['@F1@'], 'CHIL': ['@F2@']},
+                '@I1@': {'ID': '@I1@', 'NAME': 'Tim /James/', 'SEX': 'M', 'BIRT': '23 JUL 1972', 'FAMC': '@F2@', 'DEAT': before_days, 'HUSB': ['@F1@'], 'CHIL': ['@F2@']},
                 '@I2@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': '31 MAR 2019', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
                 '@I3@': {'ID': '@I2@', 'NAME': 'Anna /Bella/', 'SEX': 'F', 'BIRT': '23 JUL 1971', 'FAMC': '@F4@', 'DEAT': 'N/A', 'WIFE': ['@F1@', '@F3@'], 'CHIL': ['@F4@']},
             }),
