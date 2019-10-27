@@ -104,6 +104,53 @@ class TestDates(unittest.TestCase):
             birth_date      = '01 JAN 1999',
             marriage_date   = '01 JAN 1982'
         )
+    
+    def test_marriage_before_divorce(self):
+        utils = self.utils
+
+        self.assertTrue(utils.marriage_before_divorce(
+            marriage_date      = '01 JAN 1984',
+            divorce_date   = '01 JAN 2018',
+        ))
+
+        self.assertTrue(utils.marriage_before_divorce(
+            marriage_date      = '01 JAN 1984',
+            divorce_date   = 'N/A',
+        ))
+
+        self.assertTrue(utils.marriage_before_divorce(
+            marriage_date      = 'N/A',
+            divorce_date   = 'N/A',
+        ))
+
+        self.assertRaises(ValueError, utils.marriage_before_divorce,
+            marriage_date      = '01 JAN 1999',
+            divorce_date   = '01 JAN 1982'
+        )
+
+    
+    def test_marriage_before_death(self):
+        utils = self.utils
+
+        self.assertTrue(utils.marriage_before_death(
+            marriage_date      = '01 JAN 1984',
+            death_date   = '01 JAN 2018',
+        ))
+
+        self.assertTrue(utils.marriage_before_death(
+            marriage_date      = '01 JAN 1984',
+            death_date   = 'N/A',
+        ))
+
+        self.assertTrue(utils.marriage_before_death(
+            marriage_date      = 'N/A',
+            death_date   = 'N/A',
+        ))
+
+        self.assertRaises(ValueError, utils.marriage_before_death,
+            marriage_date      = '01 JAN 1999',
+            death_date   = '01 JAN 1982'
+        )
 
 if __name__ == '__main__':
     unittest.main()

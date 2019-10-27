@@ -71,27 +71,24 @@ class Utils:
         return True
 
 
-    # US10
-    def marriage_after_14(self, families, people):
-        family_keys =  list(families.keys())
-        for id in family_keys:
-            family = families[id]
-            husband_id = family['HUSB']
-            wife_id = family['WIFE']
-            wbd = datetime.strptime(people[wife_id]['BIRT'], _format)
-            hbd = datetime.strptime(people[husband_id]['BIRT'], _format)
-            if family['MARR'] == 'N/A':
-                return True
+   # US10
+    def marriage_after_14(self, husband_birth_date, wife_birth_date, marriage_date):
+        hbd = datetime.strptime(husband_birth_date, _format)
+        wbd = datetime.strptime(wife_birth_date, _format)
+        md = datetime.strptime(marriage_date, _format)
 
-            md = datetime.strptime(family['MARR'], _format)
-
-            if (md - hbd).days < 14 * 365:
-                raise ValueError("US10: Husband should be greater than 14 when he got married. - INFO Husband birth date {}\n".format(people[husband_id]['BIRT']))
-            if (md - wbd).days < 14 * 365:
-                raise ValueError("US10: Wife should be greater than 14 when she got married. - INFO Wife birth date {}\n".format(people[wife_id]['BIRT']))
+        if (md - hbd).days < 14 * 365:
+            raise ValueError("US10: Husband should be greater than 14 when he got married. - INFO Husband birth date='{husband_birth_date}', marriage_date = '{marriage_date}'\n".format(
+                husband_birth_date=husband_birth_date,
+                marriage_date = marriage_date,
+                ))
+        if (md - wbd).days < 14 * 365:
+            raise ValueError("US10: Wife should be greater than 14 when she got married. - INFO Wife birth date='{wife_birth_date}', marriage_date = '{marriage_date}'\n".format(
+                wife_birth_date=wife_birth_date,
+                marriage_date = marriage_date,
+                ))
 
         return True
-
 
     # US36
     def list_recent_deaths(self, people):
@@ -275,3 +272,58 @@ class Utils:
             ))
 
         return True
+    
+    # US04
+    def marriage_before_divorce(self, marriage_date, divorce_date):
+        if marriage_date is not None and marriage_date != 'N/A' and divorce_date is not None and divorce_date != 'N/A' and self.compare_dates(marriage_date, divorce_date) > 0: 
+            raise ValueError('US04: Divorce date should be before marriage date \n\t- Detail: marriage_date="{marriage_date}", divorce_date="{divorce_date}"\n'.format(
+                marriage_date=marriage_date,
+                divorce_date=divorce_date,
+            ))
+
+        return True
+    
+    # US05
+    def marriage_before_death(self, marriage_date, death_date):
+        if marriage_date is not None and marriage_date != 'N/A' and death_date is not None and death_date != 'N/A' and self.compare_dates(marriage_date, death_date) > 0 :
+            raise ValueError('US05: Marriage date should be before death date \n\t- Detail: marriage_date="{marriage_date}", death_date="{death_date}"\n'.format(
+                marriage_date=marriage_date,
+                death_date=death_date,
+            ))
+            
+        return True
+
+    # US29
+    def list_deceased(self, people):
+        deceased = []
+        indi_keys = list(people.keys())
+
+        for id in indi_keys:
+           indi = people[id]
+           if indi['DEAT'] != 'N/A':
+                deceased.append(id)
+
+        return sorted(deceased)
+
+    
+   # US34
+    def list_large_age_differences(self, people, families):
+        res = []
+
+        for id in list(families.keys()):
+            family  = families[id]
+            husband = people[family['HUSB']]
+            wife    = people[family['WIFE']]
+           
+
+            husband_birth = datetime.strptime(husband['BIRT'],_format)
+            wife_birth = datetime.strptime(wife['BIRT'],_format)
+            today_time = datetime.today()
+            
+            husband_age = today_time - wife_birth
+            wife_age = today_time - husband_birth 
+            if ((husband_age - wife_age).days > (wife_age).days) or ((wife_age - husband_age).days > (husband_age).days): 
+                res.append(husband['ID'])
+                res.append(wife['ID'])
+
+        return sorted(res)
