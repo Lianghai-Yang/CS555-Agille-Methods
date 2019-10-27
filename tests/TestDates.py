@@ -168,5 +168,38 @@ class TestDates(unittest.TestCase):
         tomorrow_date = (datetime.now() + timedelta(days=1)).strftime(_format)
         self.assertRaises(ValueError, utils.dates_bofore_current_date, date=tomorrow_date)
 
+
+    def test_birth_before_death(self):
+        utils = self.utils
+
+        birth_date = '17 JUL 1943'
+        death_date = '23 AUG 2015'
+        self.assertTrue(utils.birth_before_death(
+            birth_date=birth_date,
+            death_date=death_date
+        ))
+
+        birth_date = '17 JUL 1943'
+        death_date = 'N/A'
+        self.assertTrue(utils.birth_before_death(
+            birth_date=birth_date,
+            death_date=death_date
+        ))
+        
+        birth_date = 'N/A'
+        death_date = '20 MAR 2010'
+        self.assertRaises(ValueError, utils.birth_before_death,
+            birth_date=birth_date,
+            death_date=death_date
+        )
+
+        birth_date = '21 MAR 2013'
+        death_date = '20 MAR 2010'
+        self.assertRaises(ValueError, utils.birth_before_death,
+            birth_date=birth_date,
+            death_date=death_date
+        )
+
+
 if __name__ == '__main__':
     unittest.main()

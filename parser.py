@@ -269,20 +269,34 @@ def valueCheck():
     for individual in individuals:
         indi = individuals[individual]
 
+        indi_dates_fields = ['BIRT', 'DEAT']
+        for field in indi_dates_fields:
+            try:
+                utils.dates_bofore_current_date(indi[field])
+            except ValueError as e:
+                printError(e, iid=individual, msg=('Date Type: ' + field))
+
+        # less_than_150
         try:
             utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
         except ValueError as e:
             printError(e, fid=None, iid=individual)
 
+        # birth_before_death
+        try:
+            utils.birth_before_death(birth_date=indi['BIRT'], death_date=indi['DEAT'])
+        except ValueError as e:
+            printError(e, iid=individual)
+
 
 def printError(e, fid=None, iid=None, msg=None):
     family_info, individual_info, message = '', '', ''
     if fid is not None:
-        family_info = ' \t- FAMILIES: {fid}\n'.format(fid=fid)
+        family_info = ' \t- Family: {fid}\n'.format(fid=fid)
     if iid is not None:
-        individual_info = ' \t- INDIVIDUAL: {iid}\n'.format(iid=iid)
+        individual_info = ' \t- Individual: {iid}\n'.format(iid=iid)
     if msg is not None:
-        message = ' \t- MESSAGE: {msg}\n'.format(msg = msg)
+        message = ' \t- {msg}\n'.format(msg = msg)
     print('Error \n{e}{FAMILY}{INDIVIDUAL}{MESSAGE}'.format(
         FAMILY=family_info,
         INDIVIDUAL=individual_info,

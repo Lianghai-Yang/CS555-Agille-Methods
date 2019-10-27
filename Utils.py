@@ -342,3 +342,21 @@ class Utils:
         if self.compare_dates(current_date, date) > 0:
             return True
         raise ValueError('US01: Date should be before current date\n\t- Detail: date: {date}, current date: {current_date}\n'.format(date=date, current_date=current_date))
+
+    # US03
+    def birth_before_death(self, birth_date, death_date):
+        if birth_date is None or birth_date == 'N/A':
+            raise ValueError('US03: Birth date should not be N/A or None\n')
+
+        if death_date == 'N/A':
+            return True
+
+        if self.compare_dates(death_date, birth_date) > 0:
+            return True
+        
+        raise ValueError(
+            'US03: Birth date should be before death date\n\t- Detail: birth date: {birth_date}, death_date: {death_date}\n'.format(
+                birth_date=birth_date,
+                death_date=death_date
+            )
+        )
