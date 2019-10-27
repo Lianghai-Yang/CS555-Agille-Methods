@@ -71,7 +71,7 @@ class Utils:
         return True
 
 
-   # US10
+    # US10
     def marriage_after_14(self, husband_birth_date, wife_birth_date, marriage_date):
         hbd = datetime.strptime(husband_birth_date, _format)
         wbd = datetime.strptime(wife_birth_date, _format)
@@ -89,6 +89,7 @@ class Utils:
                 ))
 
         return True
+
 
     # US36
     def list_recent_deaths(self, people):
@@ -272,17 +273,19 @@ class Utils:
             ))
 
         return True
-    
+
+
     # US04
     def marriage_before_divorce(self, marriage_date, divorce_date):
-        if marriage_date is not None and marriage_date != 'N/A' and divorce_date is not None and divorce_date != 'N/A' and self.compare_dates(marriage_date, divorce_date) > 0: 
+        if marriage_date is not None and marriage_date != 'N/A' and divorce_date is not None and divorce_date != 'N/A' and self.compare_dates(marriage_date, divorce_date) > 0:
             raise ValueError('US04: Divorce date should be before marriage date \n\t- Detail: marriage_date="{marriage_date}", divorce_date="{divorce_date}"\n'.format(
                 marriage_date=marriage_date,
                 divorce_date=divorce_date,
             ))
 
         return True
-    
+
+
     # US05
     def marriage_before_death(self, marriage_date, death_date):
         if marriage_date is not None and marriage_date != 'N/A' and death_date is not None and death_date != 'N/A' and self.compare_dates(marriage_date, death_date) > 0 :
@@ -290,8 +293,9 @@ class Utils:
                 marriage_date=marriage_date,
                 death_date=death_date,
             ))
-            
+
         return True
+
 
     # US29
     def list_deceased(self, people):
@@ -305,8 +309,8 @@ class Utils:
 
         return sorted(deceased)
 
-    
-   # US34
+
+    # US34
     def list_large_age_differences(self, people, families):
         res = []
 
@@ -314,16 +318,27 @@ class Utils:
             family  = families[id]
             husband = people[family['HUSB']]
             wife    = people[family['WIFE']]
-           
+
 
             husband_birth = datetime.strptime(husband['BIRT'],_format)
             wife_birth = datetime.strptime(wife['BIRT'],_format)
             today_time = datetime.today()
-            
+
             husband_age = today_time - wife_birth
-            wife_age = today_time - husband_birth 
-            if ((husband_age - wife_age).days > (wife_age).days) or ((wife_age - husband_age).days > (husband_age).days): 
+            wife_age = today_time - husband_birth
+            if ((husband_age - wife_age).days > (wife_age).days) or ((wife_age - husband_age).days > (husband_age).days):
                 res.append(husband['ID'])
                 res.append(wife['ID'])
 
         return sorted(res)
+
+
+    # US01
+    def dates_bofore_current_date(self, date):
+        if date == 'N/A':
+            return True
+
+        current_date = datetime.now().strftime(_format)
+        if self.compare_dates(current_date, date) > 0:
+            return True
+        raise ValueError('US01: Date should be before current date\n\t- Detail: date: {date}, current date: {current_date}\n'.format(date=date, current_date=current_date))

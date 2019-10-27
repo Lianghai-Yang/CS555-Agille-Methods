@@ -163,10 +163,10 @@ def listing():
     utils.print_res(msg='US36 - Recent Deaths:', res=id_to_name(utils.list_recent_deaths(individuals)))
     utils.print_res(msg='US30 - Living Married:', res=id_to_name(utils.list_living_married(individuals, families)))
     utils.print_res(msg='US31 - Living Single:', res=id_to_name(utils.list_living_single(individuals,families)))
-    utils.print_res(msg='US35 - Recent births:', res=id_to_name(utils.list_recent_birth(individuals)))
-    utils.print_res(msg='US38 - upcoming births:', res=id_to_name(utils.list_upcoming_birthdays(individuals)))
-    utils.print_res(msg='US29 - deceased individuals:', res=id_to_name(utils.list_deceased(individuals)))
-    utils.print_res(msg='US34 - large age differences:', res=id_to_name(utils.list_large_age_differences(individuals,families)))
+    utils.print_res(msg='US35 - Recent Births:', res=id_to_name(utils.list_recent_birth(individuals)))
+    utils.print_res(msg='US38 - Upcoming Births:', res=id_to_name(utils.list_upcoming_birthdays(individuals)))
+    utils.print_res(msg='US29 - Deceased Individuals:', res=id_to_name(utils.list_deceased(individuals)))
+    utils.print_res(msg='US34 - Large Age Differences:', res=id_to_name(utils.list_large_age_differences(individuals,families)))
 
 
 def valueCheck():
@@ -177,6 +177,14 @@ def valueCheck():
         husb = individuals[fami['HUSB']]
         wife = individuals[fami['WIFE']]
         kids = fami['CHIL']
+
+        # dates_before_current_date
+        fami_dates_fields = ['MARR', 'DIV']
+        for field in fami_dates_fields:
+            try:
+                utils.dates_bofore_current_date(fami[field])
+            except ValueError as e:
+                printError(e, fid, msg=('Date Type: ' + field))
 
         # divorce_before_death
         try:
@@ -225,7 +233,6 @@ def valueCheck():
             utils.marriage_before_divorce(marriage_date=fami['MARR'], divorce_date=fami['DIV'])
         except ValueError as e:
             printError(e, fid=fid)
-        
 
         # Check Child's Values
         for kid in kids:
@@ -237,7 +244,6 @@ def valueCheck():
             except ValueError as e:
                 printError(e, fid=fid, iid=kid)
 
-
             # birth_before_marriage_of_parents
             try:
                 utils.birth_before_marriage_of_parents(
@@ -247,7 +253,6 @@ def valueCheck():
                 )
             except ValueError as e:
                 printError(e, fid=fid, iid=kid)
-
 
             # birth_before_death_of_parents
             try:
@@ -270,16 +275,19 @@ def valueCheck():
             printError(e, fid=None, iid=individual)
 
 
-def printError(e, fid=None, iid=None):
-    family_info, individual_info = '', ''
+def printError(e, fid=None, iid=None, msg=None):
+    family_info, individual_info, message = '', '', ''
     if fid is not None:
-        family_info = ' \t FAMILIES: {fid}'.format(fid=fid)
+        family_info = ' \t- FAMILIES: {fid}\n'.format(fid=fid)
     if iid is not None:
-        individual_info = ' \t INDIVIDUAL: {iid}'.format(iid=iid)
-    print('Error:{FAMILY}{INDIVIDUAL} \t {e}'.format(
+        individual_info = ' \t- INDIVIDUAL: {iid}\n'.format(iid=iid)
+    if msg is not None:
+        message = ' \t- MESSAGE: {msg}\n'.format(msg = msg)
+    print('Error \n{e}{FAMILY}{INDIVIDUAL}{MESSAGE}'.format(
         FAMILY=family_info,
         INDIVIDUAL=individual_info,
-        e=str(e)
+        e=str(e),
+        MESSAGE=message
     ))
 
 
