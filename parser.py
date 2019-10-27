@@ -176,23 +176,48 @@ def valueCheck():
         wife = individuals[fami['WIFE']]
         kids = fami['CHIL']
 
+        # divorce_before_death
         try:
             utils.divorce_before_death(divorce_time=fami['DIV'], death_time=husb['DEAT'])
         except ValueError as e:
             printError(e, fid, husb['ID'])
 
+        # divorce_before_death
         try:
             utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
         except ValueError as e:
             printError(e, fid, wife['ID'])
+        
+        # birth_before_marriage
+        try:
+            utils.birth_before_marriage(
+                birth_date=husb['BIRT'],
+                marriage_date=fami['MARR'],
+            )
+        except ValueError as e:
+            printError(e, fid=fid, iid=husb['ID'])
+        
+        # birth_before_marriage
+        try:
+            utils.birth_before_marriage(
+                birth_date=wife['BIRT'],
+                marriage_date=fami['MARR'],
+            )
+        except ValueError as e:
+            printError(e, fid=fid, iid=wife['ID'])
 
+        # Check Child's Values
         for kid in kids:
             chil = individuals[kid]
+
+            # parents_not_too_old
             try:
                 utils.parents_not_too_old(father_birth_date=husb['BIRT'], mother_birth_date=wife['BIRT'], child_birth_date=chil['BIRT'])
             except ValueError as e:
                 printError(e, fid=fid, iid=kid)
 
+
+            # birth_before_marriage_of_parents
             try:
                 utils.birth_before_marriage_of_parents(
                     child_birth_date=chil['BIRT'],
@@ -202,10 +227,22 @@ def valueCheck():
             except ValueError as e:
                 printError(e, fid=fid, iid=kid)
 
+
+            # birth_before_death_of_parents
+            try:
+                utils.birth_before_death_of_parents(
+                    father_death_date=husb['DEAT'],
+                    mother_death_date=wife['DEAT'],
+                    child_birth_date=chil['BIRT']
+                )
+            except ValueError as e:
+                printError(e, fid=fid, iid=kid)
+
     # Check Individuals
     print('\n--------Checking Individuals---------')
     for individual in individuals:
         indi = individuals[individual]
+
         try:
             utils.less_than_150(birth_time=indi['BIRT'], death_time=indi['DEAT'])
         except ValueError as e:

@@ -1,0 +1,72 @@
++-------+-----------------+--------+-------------+-------------+------------------+----------+
+|   ID  |       NAME      | GENDER |  BIRTH DATE |  DEATH DAET |      SPOUSE      |  CHILD   |
++-------+-----------------+--------+-------------+-------------+------------------+----------+
+| @I10@ | William /Smith/ |   M    |  3 OCT 2019 |     N/A     |       N/A        | ['@F4@'] |
+| @I11@ |   Cong /Wang/   |   M    | 27 OCT 1980 |     N/A     |     ['@F5@']     |   N/A    |
+| @I12@ |   John /Smith/  |   M    | 12 MAY 2000 |     N/A     |       N/A        | ['@F4@'] |
+| @I13@ |   Hai /Liang/   |   M    |  7 APR 2020 |     N/A     |       N/A        |   N/A    |
+| @I14@ |   Black /Tony/  |   M    |  7 OCT 2019 |     N/A     |       N/A        |   N/A    |
+|  @I1@ |  Emme /Taylor/  |   F    | 20 MAR 1989 | 13 OCT 2019 |     ['@F1@']     |   N/A    |
+|  @I2@ |   John /Smith/  |   M    |  8 APR 1846 |     N/A     |     ['@F1@']     |   N/A    |
+|  @I3@ |  Emily /Smith/  |   F    |  5 DEC 1970 |     N/A     | ['@F2@', '@F3@'] | ['@F1@'] |
+|  @I4@ |  Bob /Roberts/  |   M    | 14 AUG 1970 |     N/A     |     ['@F2@']     |   N/A    |
+|  @I5@ | Patrick /Smith/ |   M    | 13 MAY 1972 | 12 OCT 2001 |     ['@F4@']     | ['@F1@'] |
+|  @I6@ |  Jane /Harris/  |   F    |  7 JUL 1980 |     N/A     | ['@F4@', '@F5@'] |   N/A    |
+|  @I7@ |  Amy /Roberts/  |   F    | 12 MAR 1992 |     N/A     |       N/A        | ['@F2@'] |
+|  @I8@ |  Trum /Johnson/ |   M    |  7 NOV 1969 | 12 MAY 2000 |     ['@F3@']     |   N/A    |
+|  @I9@ | Jacob /Johnson/ |   M    |  9 APR 1989 |     N/A     |       N/A        | ['@F3@'] |
++-------+-----------------+--------+-------------+-------------+------------------+----------+
++------+------------+-----------------+---------+---------------+--------------------+------------+---------------+
+|  ID  | HUSBAND ID |   HUSBAND NAME  | WIFE ID |   WIFE NAME   |      CHILDREN      |  DIVORCE   | MARRIAGE DATE |
++------+------------+-----------------+---------+---------------+--------------------+------------+---------------+
+| @F1@ |    @I2@    |   John /Smith/  |   @I1@  | Emme /Taylor/ |  ['@I3@', '@I5@']  |    N/A     |  22 JUL 1998  |
+| @F2@ |    @I4@    |  Bob /Roberts/  |   @I3@  | Emily /Smith/ |      ['@I7@']      |    N/A     |  12 JAN 1980  |
+| @F3@ |    @I8@    |  Trum /Johnson/ |   @I3@  | Emily /Smith/ |      ['@I9@']      |    N/A     |  22 JUL 1988  |
+| @F4@ |    @I5@    | Patrick /Smith/ |   @I6@  | Jane /Harris/ | ['@I10@', '@I12@'] | 7 JUL 2002 |  17 MAY 2001  |
+| @F5@ |   @I11@    |   Cong /Wang/   |   @I6@  | Jane /Harris/ |         []         |    N/A     |  22 JUL 1976  |
++------+------------+-----------------+---------+---------------+--------------------+------------+---------------+
+US36 - Recent Deaths:
+['Emme /Taylor/']
+-------------------------------------
+US30 - Living Married:
+['Cong /Wang/', 'John /Smith/', 'Emily /Smith/', 'Emily /Smith/', 'Bob /Roberts/', 'Jane /Harris/', 'Jane /Harris/']
+-------------------------------------
+US31 - Living Single:
+['William /Smith/', 'John /Smith/', 'Hai /Liang/', 'Black /Tony/', 'Amy /Roberts/', 'Jacob /Johnson/']
+-------------------------------------
+US35 - Recent births:
+['William /Smith/', 'Hai /Liang/', 'Black /Tony/']
+-------------------------------------
+US38 - upcoming births:
+['Cong /Wang/']
+-------------------------------------
+
+--------Checking Families------------
+Error:   FAMILIES: @F1@          INDIVIDUAL: @I3@        US12: Father's birth date greater than 80 years older than his child. 
+        - Detail: father_birth_date="8 APR 1846", child_birth_date="5 DEC 1970"
+
+Error:   FAMILIES: @F1@          INDIVIDUAL: @I3@        US08: Child birth date should be after marriage of parents 
+        - Detail: child_birth_date="5 DEC 1970", marriage_date="22 JUL 1998"
+
+Error:   FAMILIES: @F1@          INDIVIDUAL: @I5@        US12: Father's birth date greater than 80 years older than his child. 
+        - Detail: father_birth_date="8 APR 1846", child_birth_date="13 MAY 1972"
+
+Error:   FAMILIES: @F1@          INDIVIDUAL: @I5@        US08: Child birth date should be after marriage of parents 
+        - Detail: child_birth_date="13 MAY 1972", marriage_date="22 JUL 1998"
+
+Error:   FAMILIES: @F4@          INDIVIDUAL: @I5@        US06: Death Date is not before Divorce Date 
+        - Detail: divorce_time="2002-07-07 00:00:00",="2001-10-12 00:00:00"
+
+Error:   FAMILIES: @F4@          INDIVIDUAL: @I10@       US08: Child birth should not be more than 9 months after parents' divorce 
+        - Detail: child_birth_date="3 OCT 2019", divorce_date="7 JUL 2002"
+
+Error:   FAMILIES: @F4@          INDIVIDUAL: @I10@       US09: Father's death date should be after birth date of child 
+        - Detail: child_birth_date="3 OCT 2019", father_death_date="12 OCT 2001"
+
+Error:   FAMILIES: @F4@          INDIVIDUAL: @I12@       US08: Child birth date should be after marriage of parents 
+        - Detail: child_birth_date="12 MAY 2000", marriage_date="17 MAY 2001"
+
+
+--------Checking Individuals---------
+Error:   INDIVIDUAL: @I2@        US07: Active living time should be less than 150 years 
+        - Detail: birth_time="1846-04-08 00:00:00"
