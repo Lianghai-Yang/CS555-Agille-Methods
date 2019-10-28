@@ -197,7 +197,7 @@ def valueCheck():
             utils.divorce_before_death(divorce_time=fami['DIV'], death_time=wife['DEAT'])
         except ValueError as e:
             printError(e, fid, wife['ID'])
-        
+
         # birth_before_marriage
         try:
             utils.birth_before_marriage(
@@ -206,7 +206,7 @@ def valueCheck():
             )
         except ValueError as e:
             printError(e, fid=fid, iid=husb['ID'])
-        
+
         # birth_before_marriage
         try:
             utils.birth_before_marriage(
@@ -221,18 +221,24 @@ def valueCheck():
             utils.marriage_before_death(marriage_date=fami['MARR'], death_date=husb['DEAT'])
         except ValueError as e:
             printError(e, fid, husb['ID'])
-        
+
         # marriage_before_death
         try:
             utils.marriage_before_death(marriage_date=fami['MARR'], death_date=wife['DEAT'])
         except ValueError as e:
             printError(e, fid, wife['ID'])
-        
+
         # marriage_before_divorce
         try:
             utils.marriage_before_divorce(marriage_date=fami['MARR'], divorce_date=fami['DIV'])
         except ValueError as e:
             printError(e, fid=fid)
+
+        # marriage_after_14
+        try:
+            utils.marriage_after_14(husband_birth_date=husb['BIRT'], wife_birth_date=wife['BIRT'], marriage_date=fami['MARR'])
+        except ValueError as e:
+            printError(e, fid=fid, msg='Husband Birthdate {}, Wife Birthdate {}, Marriage date {}'.format(husb['BIRT'], wife['BIRT'], fami['MARR']))
 
         # Check Child's Values
         for kid in kids:

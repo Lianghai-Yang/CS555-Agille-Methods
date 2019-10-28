@@ -1,0 +1,192 @@
++-------+-----------------+--------+-------------+-------------+------------------+----------+
+|   ID  |       NAME      | GENDER |  BIRTH DATE |  DEATH DAET |      SPOUSE      |  CHILD   |
++-------+-----------------+--------+-------------+-------------+------------------+----------+
+| @I10@ | William /Smith/ |   M    |  3 OCT 2019 |     N/A     | ['@F6@', '@F7@'] | ['@F4@'] |
+| @I11@ |   Cong /Wang/   |   M    | 26 NOV 1980 |     N/A     |     ['@F5@']     |   N/A    |
+| @I12@ |   John /Smith/  |   M    | 12 MAY 2000 |     N/A     |       N/A        |   N/A    |
+| @I13@ |   Hai /Liang/   |   M    |  7 APR 2020 |     N/A     |       N/A        |   N/A    |
+| @I14@ |   Black /Tony/  |   M    |  7 OCT 2019 |     N/A     |       N/A        |   N/A    |
+| @I15@ |   Emily /Tame/  |   F    |  8 JUL 2019 | 11 OCT 2030 |     ['@F6@']     |   N/A    |
+| @I16@ |  Chole /Harper/ |   F    | 12 JUN 2010 |     N/A     |     ['@F7@']     |   N/A    |
+|  @I1@ |  Emme /Taylor/  |   F    | 20 MAR 1989 | 13 OCT 2019 |     ['@F1@']     |   N/A    |
+|  @I2@ |   John /Smith/  |   M    |  8 APR 1846 |     N/A     |     ['@F1@']     |   N/A    |
+|  @I3@ |  Emily /Smith/  |   F    |  5 DEC 1970 |     N/A     | ['@F2@', '@F3@'] | ['@F1@'] |
+|  @I4@ |  Bob /Roberts/  |   M    | 14 AUG 1970 | 23 AUG 1942 |     ['@F2@']     |   N/A    |
+|  @I5@ | Patrick /Smith/ |   M    | 13 MAY 1972 | 12 OCT 2001 |     ['@F4@']     | ['@F1@'] |
+|  @I6@ |  Jane /Harris/  |   F    |  7 JUL 1980 |     N/A     | ['@F4@', '@F5@'] |   N/A    |
+|  @I7@ |  Amy /Roberts/  |   F    | 12 MAR 1992 |     N/A     |       N/A        | ['@F2@'] |
+|  @I8@ |  Trum /Johnson/ |   M    |  7 NOV 1969 | 12 MAY 2000 |     ['@F3@']     |   N/A    |
+|  @I9@ | Jacob /Johnson/ |   M    |  9 APR 1989 |     N/A     |       N/A        | ['@F3@'] |
++-------+-----------------+--------+-------------+-------------+------------------+----------+
++------+------------+-----------------+---------+----------------+------------------+------------+---------------+
+|  ID  | HUSBAND ID |   HUSBAND NAME  | WIFE ID |   WIFE NAME    |     CHILDREN     |  DIVORCE   | MARRIAGE DATE |
++------+------------+-----------------+---------+----------------+------------------+------------+---------------+
+| @F1@ |    @I2@    |   John /Smith/  |   @I1@  | Emme /Taylor/  | ['@I3@', '@I5@'] |    N/A     |  22 JUL 1998  |
+| @F2@ |    @I4@    |  Bob /Roberts/  |   @I3@  | Emily /Smith/  |     ['@I7@']     |    N/A     |  12 JAN 1980  |
+| @F3@ |    @I8@    |  Trum /Johnson/ |   @I3@  | Emily /Smith/  |     ['@I9@']     |    N/A     |  22 JUL 1988  |
+| @F4@ |    @I5@    | Patrick /Smith/ |   @I6@  | Jane /Harris/  |    ['@I10@']     | 7 JUL 2002 |  17 MAY 2001  |
+| @F5@ |   @I11@    |   Cong /Wang/   |   @I6@  | Jane /Harris/  |        []        |    N/A     |  22 JUL 1976  |
+| @F6@ |   @I10@    | William /Smith/ |  @I15@  |  Emily /Tame/  |        []        |    N/A     |  13 NOV 2033  |
+| @F7@ |   @I10@    | William /Smith/ |  @I16@  | Chole /Harper/ |        []        | 8 MAR 2027 |   8 AUG 2027  |
++------+------------+-----------------+---------+----------------+------------------+------------+---------------+
+US36 - Recent Deaths:
+['Emily /Tame/', 'Emme /Taylor/']
+-------------------------------------
+US30 - Living Married:
+['William /Smith/', 'William /Smith/', 'Cong /Wang/', 'Chole /Harper/', 'John /Smith/', 'Emily /Smith/', 'Emily /Smith/', 'Jane /Harris/', 'Jane /Harris/']
+-------------------------------------
+US31 - Living Single:
+['John /Smith/', 'Hai /Liang/', 'Black /Tony/', 'Amy /Roberts/', 'Jacob /Johnson/']
+-------------------------------------
+US35 - Recent Births:
+['William /Smith/', 'Hai /Liang/', 'Black /Tony/']
+-------------------------------------
+US38 - Upcoming Births:
+['Cong /Wang/']
+-------------------------------------
+US29 - Deceased Individuals:
+['Emily /Tame/', 'Emme /Taylor/', 'Bob /Roberts/', 'Patrick /Smith/', 'Trum /Johnson/']
+-------------------------------------
+US34 - Large Age Differences:
+['William /Smith/', 'William /Smith/', 'Emily /Tame/', 'Chole /Harper/', 'Emme /Taylor/', 'John /Smith/']
+-------------------------------------
+
+--------Checking Families------------
+Error 
+US10: Wife should be greater than 14 when she got married. - INFO Wife birth date='20 MAR 1989', marriage_date = '22 JUL 1998'
+        - Family: @F1@
+        - Husband Birthdate 8 APR 1846, Wife Birthdate 20 MAR 1989, Marriage date 22 JUL 1998
+
+Error 
+US12: Father's birth date greater than 80 years older than his child. 
+        - Detail: father_birth_date="8 APR 1846", child_birth_date="5 DEC 1970"
+        - Family: @F1@
+        - Individual: @I3@
+
+Error 
+US08: Child birth date should be after marriage of parents 
+        - Detail: child_birth_date="5 DEC 1970", marriage_date="22 JUL 1998"
+        - Family: @F1@
+        - Individual: @I3@
+
+Error 
+US12: Father's birth date greater than 80 years older than his child. 
+        - Detail: father_birth_date="8 APR 1846", child_birth_date="13 MAY 1972"
+        - Family: @F1@
+        - Individual: @I5@
+
+Error 
+US08: Child birth date should be after marriage of parents 
+        - Detail: child_birth_date="13 MAY 1972", marriage_date="22 JUL 1998"
+        - Family: @F1@
+        - Individual: @I5@
+
+Error 
+US05: Marriage date should be before death date 
+        - Detail: marriage_date="12 JAN 1980", death_date="23 AUG 1942"
+        - Family: @F2@
+        - Individual: @I4@
+
+Error 
+US10: Husband should be greater than 14 when he got married. - INFO Husband birth date='14 AUG 1970', marriage_date = '12 JAN 1980'
+        - Family: @F2@
+        - Husband Birthdate 14 AUG 1970, Wife Birthdate 5 DEC 1970, Marriage date 12 JAN 1980
+
+Error 
+US09: Father's death date should be after birth date of child 
+        - Detail: child_birth_date="12 MAR 1992", father_death_date="23 AUG 1942"
+        - Family: @F2@
+        - Individual: @I7@
+
+Error 
+US06: Death Date is not before Divorce Date 
+        - Detail: divorce_time="2002-07-07 00:00:00",="2001-10-12 00:00:00"
+        - Family: @F4@
+        - Individual: @I5@
+
+Error 
+US08: Child birth should not be more than 9 months after parents' divorce 
+        - Detail: child_birth_date="3 OCT 2019", divorce_date="7 JUL 2002"
+        - Family: @F4@
+        - Individual: @I10@
+
+Error 
+US09: Father's death date should be after birth date of child 
+        - Detail: child_birth_date="3 OCT 2019", father_death_date="12 OCT 2001"
+        - Family: @F4@
+        - Individual: @I10@
+
+Error 
+US02: Birth date should be before marriage date 
+        - Detail: birth_date="26 NOV 1980", marriage_date="22 JUL 1976"
+        - Family: @F5@
+        - Individual: @I11@
+
+Error 
+US02: Birth date should be before marriage date 
+        - Detail: birth_date="7 JUL 1980", marriage_date="22 JUL 1976"
+        - Family: @F5@
+        - Individual: @I6@
+
+Error 
+US10: Husband should be greater than 14 when he got married. - INFO Husband birth date='26 NOV 1980', marriage_date = '22 JUL 1976'
+        - Family: @F5@
+        - Husband Birthdate 26 NOV 1980, Wife Birthdate 7 JUL 1980, Marriage date 22 JUL 1976
+
+Error 
+US01: Date should be before current date
+        - Detail: date: 13 NOV 2033, current date: 27 Oct 2019
+        - Family: @F6@
+        - Date Type: MARR
+
+Error 
+US05: Marriage date should be before death date 
+        - Detail: marriage_date="13 NOV 2033", death_date="11 OCT 2030"
+        - Family: @F6@
+        - Individual: @I15@
+
+Error 
+US01: Date should be before current date
+        - Detail: date: 8 AUG 2027, current date: 27 Oct 2019
+        - Family: @F7@
+        - Date Type: MARR
+
+Error 
+US01: Date should be before current date
+        - Detail: date: 8 MAR 2027, current date: 27 Oct 2019
+        - Family: @F7@
+        - Date Type: DIV
+
+Error 
+US04: Divorce date should be before marriage date 
+        - Detail: marriage_date="8 AUG 2027", divorce_date="8 MAR 2027"
+        - Family: @F7@
+
+Error 
+US10: Husband should be greater than 14 when he got married. - INFO Husband birth date='3 OCT 2019', marriage_date = '8 AUG 2027'
+        - Family: @F7@
+        - Husband Birthdate 3 OCT 2019, Wife Birthdate 12 JUN 2010, Marriage date 8 AUG 2027
+
+
+--------Checking Individuals---------
+Error 
+US07: Active living time should be less than 150 years 
+        - Detail: birth_time="1846-04-08 00:00:00"
+        - Individual: @I2@
+
+Error 
+US03: Birth date should be before death date
+        - Detail: birth date: 14 AUG 1970, death_date: 23 AUG 1942
+        - Individual: @I4@
+
+Error 
+US01: Date should be before current date
+        - Detail: date: 7 APR 2020, current date: 27 Oct 2019
+        - Individual: @I13@
+        - Date Type: BIRT
+
+Error 
+US01: Date should be before current date
+        - Detail: date: 11 OCT 2030, current date: 27 Oct 2019
+        - Individual: @I15@
+        - Date Type: DEAT
