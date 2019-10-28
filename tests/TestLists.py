@@ -107,7 +107,7 @@ class TestLists(unittest.TestCase):
                     "@F3@": {"ID": "@F3@","HUSB": "@I8@","WIFE": "@I3@","CHIL": ["@I9@"],"DIV": "N/A","MARR": "23 JAN 1989"},
                 }
             ),
-            sorted(['@I1@', '@I2@', '@I3@'])
+        sorted(['@I1@', '@I2@'])
         )
         
 
