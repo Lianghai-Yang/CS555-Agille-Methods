@@ -109,7 +109,7 @@ class TestLists(unittest.TestCase):
             sorted(['@I1@', '@I2@'])
         )
         
-    def test_child_list(self):
+    def test_fewer_than_15_siblings(self):
         utils = self.utils
         self.assertTrue(utils.fewer_than_15_siblings(child_list=[
             '@I1@',
