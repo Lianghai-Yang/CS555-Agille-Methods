@@ -344,6 +344,7 @@ class Utils:
             return True
         raise ValueError('US01: Date should be before current date\n\t- Detail: date: {date}, current date: {current_date}\n'.format(date=date, current_date=current_date))
 
+
     # US03
     def birth_before_death(self, birth_date, death_date):
         if birth_date is None or birth_date == 'N/A':
@@ -361,6 +362,7 @@ class Utils:
                 death_date=death_date
             )
         )
+
 
     # US11
     def no_bigamy(self, marriage_divorce_list):
@@ -383,4 +385,11 @@ class Utils:
                     div_date=datetime.fromtimestamp(sorted_list[i]['DIV']).strftime(_format) if sorted_list[i]['DIV'] != math.inf else 'N/A'
                 ))
 
+        return True
+    
+
+    # US15
+    def fewer_than_15_siblings(self, child_list):
+        if len(child_list) >= 15:
+            raise ValueError('US15: Number of siblings should be less than 15. Now is {num}'.format(num=len(child_list)))
         return True

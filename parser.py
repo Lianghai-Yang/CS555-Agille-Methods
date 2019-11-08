@@ -270,6 +270,12 @@ def valueCheck():
             except ValueError as e:
                 printError(e, fid=fid, iid=kid)
 
+        # Check number of siblings
+        try:
+            utils.fewer_than_15_siblings(child_list=fami['CHIL'])
+        except ValueError as e:
+            printError(e, fid=fid)
+
     # Check Individuals
     print('\n--------Checking Individuals---------')
     for individual in individuals:

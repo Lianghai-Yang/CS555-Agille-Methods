@@ -79,7 +79,6 @@ class TestLists(unittest.TestCase):
             sorted(['@I1@'])
         )
    
-
     def test_deceased(self):
         utils = self.utils
         self.assertListEqual(utils.list_deceased(
@@ -110,6 +109,41 @@ class TestLists(unittest.TestCase):
             sorted(['@I1@', '@I2@'])
         )
         
+    def test_child_list(self):
+        utils = self.utils
+        self.assertTrue(utils.fewer_than_15_siblings(child_list=[
+            '@I1@',
+            '@I2@',
+            '@I3@',
+            '@I4@',
+            '@I5@',
+            '@I6@',
+            '@I7@',
+            '@I8@',
+            '@I9@',
+            '@I10@',
+            '@11@',
+            '@I2@',
+            '@I3@',
+            '@I4@',
+        ]))
+        self.assertRaises(ValueError, utils.fewer_than_15_siblings, child_list=[
+            '@I1@',
+            '@I2@',
+            '@I3@',
+            '@I4@',
+            '@I5@',
+            '@I6@',
+            '@I7@',
+            '@I8@',
+            '@I9@',
+            '@I10@',
+            '@11@',
+            '@I2@',
+            '@I3@',
+            '@I4@',
+            '@I5@',
+        ])
 
 if __name__ == '__main__':
     unittest.main()
