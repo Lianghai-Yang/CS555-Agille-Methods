@@ -293,6 +293,18 @@ def valueCheck():
             utils.birth_before_death(birth_date=indi['BIRT'], death_date=indi['DEAT'])
         except ValueError as e:
             printError(e, iid=individual)
+        
+        # no_bigamy
+        indi_role_fields = ['HUSB', 'WIFE']
+        for role in indi_role_fields:
+            if role in indi:
+                marriage_divorce_list = list()
+                for fami_id in indi[role]:
+                    marriage_divorce_list.append({ 'MARR': families[fami_id]['MARR'], 'DIV': families[fami_id]['DIV'] })
+                try:
+                    utils.no_bigamy(marriage_divorce_list=marriage_divorce_list)
+                except ValueError as e:
+                    printError(e, iid=individual)            
 
 
 def printError(e, fid=None, iid=None, msg=None):

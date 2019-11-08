@@ -185,7 +185,7 @@ class TestDates(unittest.TestCase):
             birth_date=birth_date,
             death_date=death_date
         ))
-        
+
         birth_date = 'N/A'
         death_date = '20 MAR 2010'
         self.assertRaises(ValueError, utils.birth_before_death,
@@ -200,6 +200,25 @@ class TestDates(unittest.TestCase):
             death_date=death_date
         )
 
+
+    def test_no_bigamy(self):
+        utils = self.utils
+
+        self.assertTrue(utils.no_bigamy(marriage_divorce_list=[
+            { "MARR": "07 JUL 2010", "DIV": "07 JUL 2011" },
+            { "MARR": "08 JUL 2011", "DIV": "N/A"},
+            { "MARR": "05 JUL 2009", "DIV": "06 JUL 2010"}
+        ]))
+
+        self.assertRaises(ValueError, utils.no_bigamy, marriage_divorce_list=[
+            { "MARR": "07 JUL 2010", "DIV": "07 JUL 2011" },
+            { "MARR": "08 JUL 2010", "DIV": "N/A" }
+        ])
+
+        self.assertRaises(ValueError, utils.no_bigamy, marriage_divorce_list=[
+            { "MARR": "07 JUL 2010", "DIV": "N/A" },
+            { "MARR": "08 JUL 2010", "DIV": "N/A" }
+        ])
 
 if __name__ == '__main__':
     unittest.main()

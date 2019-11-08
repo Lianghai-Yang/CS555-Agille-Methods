@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import math
 
 _format = '%d %b %Y'
 
@@ -353,10 +354,33 @@ class Utils:
 
         if self.compare_dates(death_date, birth_date) > 0:
             return True
-        
+
         raise ValueError(
             'US03: Birth date should be before death date\n\t- Detail: birth date: {birth_date}, death_date: {death_date}\n'.format(
                 birth_date=birth_date,
                 death_date=death_date
             )
         )
+
+    # US11
+    def no_bigamy(self, marriage_divorce_list):
+        serialized = map(
+            lambda item: {
+                "MARR": datetime.strptime(item['MARR'], _format).timestamp() if item['MARR'] != 'N/A' and item['MARR'] is not None else math.inf,
+                "DIV": datetime.strptime(item['DIV'], _format).timestamp() if item['DIV'] != "N/A" and item['DIV'] is not None else math.inf
+            },
+            marriage_divorce_list
+        )
+
+        sorted_list = sorted(serialized, key=lambda x: x['MARR'])
+
+        for i in range(len(sorted_list)):
+            if i == len(sorted_list) - 1:
+                break
+            if sorted_list[i]['DIV'] > sorted_list[i + 1]['MARR']:
+                raise ValueError('US11: no bigamy allowed. marriage date {marr_date} is before divorce date {div_date}'.format(
+                    marr_date=datetime.fromtimestamp(sorted_list[i + 1]['MARR']).strftime(_format) if sorted_list[i]['MARR'] != math.inf else 'N/A',
+                    div_date=datetime.fromtimestamp(sorted_list[i]['DIV']).strftime(_format) if sorted_list[i]['DIV'] != math.inf else 'N/A'
+                ))
+
+        return True
