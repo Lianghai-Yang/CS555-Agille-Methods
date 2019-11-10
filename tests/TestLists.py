@@ -145,5 +145,24 @@ class TestLists(unittest.TestCase):
             '@I5@',
         ])
 
+    def test_list_upcoming_anniversaries(self):
+        utils = self.utils
+        self.assertListEqual(
+            utils.list_living_married(
+                people = {
+                    "@I1@": {"ID": "@I1@","NAME": "Emme /Taylor/","SEX": "F","BIRT": "20 MAR 1949","DEAT": "N/A","WIFE": ["@F1@"]},
+                    "@I2@": {"ID": "@I2@","NAME": "John /Smith/","SEX": "M","BIRT": "8 APR 1946","DEAT": "N/A","HUSB": ["@F1@"]},
+                    "@I3@": {"ID": "@I3@","NAME": "Emily /Smith/","SEX": "F","BIRT": "5 DEC 1970","FAMC": "@F1@","DEAT": "N/A","CHIL": ["@F1@"],"WIFE": ["@F3@"]},
+                    "@I8@": {"ID": "@I8@","NAME": "Trum /Johnson/","SEX": "M","BIRT": "7 NOV 1969","DEAT": "12 MAY 2000","HUSB": ["@F3@"]},
+                    "@I9@": {"ID": "@I9@","NAME": "Jacob /Johnson/","SEX": "M","BIRT": "9 APR 1989","FAMC": "@F3@","DEAT": "N/A","CHIL": ["@F3@"]},
+                },
+                families = {
+                    "@F1@": {"ID": "@F1@","HUSB": "@I2@","WIFE": "@I1@","CHIL": ["@I3@","@I5@"],"DIV": "N/A","MARR": "12 NOV 1968"},
+                    "@F3@": {"ID": "@F3@","HUSB": "@I8@","WIFE": "@I3@","CHIL": ["@I9@"],"DIV": "N/A","MARR": "23 JAN 1989"},
+                }
+            ),
+            sorted(['@I1@', '@I2@', '@I3@'])
+        )
+
 if __name__ == '__main__':
     unittest.main()

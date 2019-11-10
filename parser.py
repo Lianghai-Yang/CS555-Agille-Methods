@@ -167,7 +167,7 @@ def listing():
     utils.print_res(msg='US38 - Upcoming Births:', res=id_to_name(utils.list_upcoming_birthdays(individuals)))
     utils.print_res(msg='US29 - Deceased Individuals:', res=id_to_name(utils.list_deceased(individuals)))
     utils.print_res(msg='US34 - Large Age Differences:', res=id_to_name(utils.list_large_age_differences(individuals,families)))
-
+    utils.print_res(msg='US39 - Upcoming anniversaries:', res=id_to_name(utils.list_upcoming_anniversaries(individuals, families))) 
 
 def valueCheck():
     # Check Families
@@ -185,6 +185,12 @@ def valueCheck():
                 utils.dates_bofore_current_date(fami[field])
             except ValueError as e:
                 printError(e, fid, msg=('Date Type: ' + field))
+        
+        # Correct gender for role
+        try:
+            utils.correct_gender_for_role(husband_gender= husb['SEX'], wife_gender = wife['SEX'])
+        except ValueError as e:
+            printError(e,fid,husb['ID'],wife['ID'])
 
         # divorce_before_death
         try:

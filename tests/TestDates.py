@@ -220,5 +220,18 @@ class TestDates(unittest.TestCase):
             { "MARR": "08 JUL 2010", "DIV": "N/A" }
         ])
 
+    def test_correct_gender_for_role(self):
+        utils = self.utils
+
+        self.assertTrue(utils.correct_gender_for_role(
+            husband_gender = 'M',
+            wife_gender   = 'F',
+        ))
+
+        self.assertTrue(utils.correct_gender_for_role(
+            husband_gender = 'M',
+            wife_gender   = 'M',
+        ))
+
 if __name__ == '__main__':
     unittest.main()
