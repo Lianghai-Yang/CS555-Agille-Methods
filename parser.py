@@ -1,5 +1,6 @@
 import prettytable as pt
-from Utils import Utils
+from Utils import Utils, _format
+from datetime import datetime
 
 KEYWORDS = {
     '0': ('INDI', 'FAM', 'HEAD', 'TRLR', 'NOTE',),
@@ -281,6 +282,23 @@ def valueCheck():
             utils.fewer_than_15_siblings(child_list=fami['CHIL'])
         except ValueError as e:
             printError(e, fid=fid)
+        
+        # Check siblings spacing
+        siblings_list = list(map(lambda child_id: individuals[child_id], fami['CHIL']))
+        # sorted_siblings_list = sorted(siblings_list, key=lambda child: datetime.strptime(child['BIRT'], _format))
+        for i in range(len(siblings_list)):
+            for j in range(i, len(siblings_list)):
+                date1 = siblings_list[i]['BIRT']
+                date2 = siblings_list[j]['BIRT']
+                try:
+                    utils.siblings_spacing(date1, date2)
+                except ValueError as e:
+                    printError(e, fid=fid, msg='child {id1} on {date1}, child {id2} on {date2}'.format(
+                        id1=siblings_list[i]['ID'],
+                        date1=date1,
+                        id2=siblings_list[j]['ID'],
+                        date2=date2
+                    ))
 
     # Check Individuals
     print('\n--------Checking Individuals---------')

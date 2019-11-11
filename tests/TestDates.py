@@ -220,6 +220,7 @@ class TestDates(unittest.TestCase):
             { "MARR": "08 JUL 2010", "DIV": "N/A" }
         ])
 
+
     def test_correct_gender_for_role(self):
         utils = self.utils
 
@@ -232,6 +233,15 @@ class TestDates(unittest.TestCase):
             husband_gender = 'M',
             wife_gender   = 'M',
         ))
+
+
+    def test_siblings_spacing(self):
+        utils = self.utils
+        self.assertTrue(utils.siblings_spacing('07 JUL 2018', '07 JUL 2017'))
+        self.assertTrue(utils.siblings_spacing('07 JUL 2018', '08 JUL 2018'))
+        self.assertRaises(ValueError, utils.siblings_spacing, '07 JUL 2018', '10 JUL 2018')
+        self.assertRaises(ValueError, utils.siblings_spacing, '07 JUL 2018', '07 JAN 2019')
+
 
 if __name__ == '__main__':
     unittest.main()

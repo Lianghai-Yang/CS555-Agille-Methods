@@ -393,3 +393,11 @@ class Utils:
         if len(child_list) >= 15:
             raise ValueError('US15: Number of siblings should be less than 15. Now is {num}'.format(num=len(child_list)))
         return True
+
+    
+    # US13
+    def siblings_spacing(self, date1, date2):
+        diff = abs(datetime.strptime(date1, _format) - datetime.strptime(date2, _format))
+        if diff <= timedelta(weeks=8*4) and diff >= timedelta(days=2):
+            raise ValueError('US13: birth dates of siblings should be more than 8 months apart and less than 2 days apart')
+        return True                
