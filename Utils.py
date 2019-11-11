@@ -401,3 +401,34 @@ class Utils:
         if diff <= timedelta(weeks=8*4) and diff >= timedelta(days=2):
             raise ValueError('US13: birth dates of siblings should be more than 8 months apart and less than 2 days apart')
         return True                
+
+
+    # US21
+    def correct_gender_for_role(self, husband_gender, wife_gender):
+        
+        if husband_gender != 'M':
+                raise ValueError ('US21: Husband in family should be male')
+        if wife_gender != 'F':
+                raise ValueError ('US21: Wife in family should be female')
+        return True      
+
+    # US39
+    def list_upcoming_anniversaries(self, people, families):
+        res = []
+        today = datetime.today()
+        for id in list(families.keys()):
+            family  = families[id]
+            husband = people[family['HUSB']]
+            wife    = people[family['WIFE']]
+            if husband['DEAT'] == 'N/A' and wife['DEAT'] == 'N/A':
+        
+                
+                marriage_time = datetime.strptime(family['MARR'],_format)
+                marriage_date = datetime(today.year,marriage_time.month, marriage_time.day)
+                delta = marriage_date - today
+                if marriage_date > today and delta < timedelta(days = 30):
+                   res.append(husband['ID'])
+                   res.append(wife['ID'])
+
+        return sorted(res)  
+        
