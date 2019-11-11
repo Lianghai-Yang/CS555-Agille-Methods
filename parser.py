@@ -285,7 +285,6 @@ def valueCheck():
         
         # Check siblings spacing
         siblings_list = list(map(lambda child_id: individuals[child_id], fami['CHIL']))
-        # sorted_siblings_list = sorted(siblings_list, key=lambda child: datetime.strptime(child['BIRT'], _format))
         for i in range(len(siblings_list)):
             for j in range(i, len(siblings_list)):
                 date1 = siblings_list[i]['BIRT']
@@ -300,6 +299,17 @@ def valueCheck():
                         date2=date2
                     ))
 
+        # Check male last name
+        male_list = [husb]
+        for i in range(len(kids)):
+            if individuals[kids[i]]['SEX'] == 'M':
+                male_list.append(individuals[kids[i]])
+        male_name_list = list(map(lambda male: male['NAME'], male_list))
+        try:
+            utils.male_last_name(male_name_list)
+        except ValueError as e:
+            printError(e, fid=fid)
+        
     # Check Individuals
     print('\n--------Checking Individuals---------')
     for individual in individuals:

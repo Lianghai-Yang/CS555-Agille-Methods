@@ -229,10 +229,10 @@ class TestDates(unittest.TestCase):
             wife_gender   = 'F',
         ))
 
-        self.assertTrue(utils.correct_gender_for_role(
+        self.assertRaises(ValueError, utils.correct_gender_for_role, 
             husband_gender = 'M',
             wife_gender   = 'M',
-        ))
+        )
 
 
     def test_siblings_spacing(self):
@@ -243,5 +243,10 @@ class TestDates(unittest.TestCase):
         self.assertRaises(ValueError, utils.siblings_spacing, '07 JUL 2018', '07 JAN 2019')
 
 
+    def test_male_last_name(self):
+        utils = self.utils
+        self.assertTrue(utils.male_last_name(['William /Smith/', 'John /Smith/', 'Patrick /Smith/']))
+        self.assertRaises(ValueError, utils.male_last_name, ['William /Smith/', 'John /Smith/', 'Patrick /Harris/'])
+        
 if __name__ == '__main__':
     unittest.main()

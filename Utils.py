@@ -412,6 +412,7 @@ class Utils:
                 raise ValueError ('US21: Wife in family should be female')
         return True      
 
+
     # US39
     def list_upcoming_anniversaries(self, people, families):
         res = []
@@ -431,4 +432,13 @@ class Utils:
                    res.append(wife['ID'])
 
         return sorted(res)  
-        
+
+
+    # US16
+    def male_last_name(self, males_list):
+        for i in range(len(males_list)):
+            if i == len(males_list) - 1:
+                break
+            if males_list[i].split()[1] != males_list[i + 1].split()[1]:
+                raise ValueError('US16: {name1} and {name2} have different last name'.format(name1=males_list[i], name2=males_list[i + 1]))
+        return True
